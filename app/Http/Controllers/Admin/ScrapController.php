@@ -46,7 +46,7 @@ class ScrapController extends Controller
                     'image_thumb' => $value,
                     'title'       => $title[$key] ?? '',
                     'timestamp'   => $timestamp[$key] ?? '',
-                    'ondate'      => date('Y-m-d H:i:s', $timestamp[$key]) ?? '0000-00-00 00:00:00',
+                    'ondate'      => !empty($timestamp[$key]) ? date('Y-m-d H:i:s', $timestamp[$key]) : '0000-00-00 00:00:00',
                     'cat_ids'     => $request->category,
                     'url'         => $url[$key] ?? '',
                     'is_active'   => 0,

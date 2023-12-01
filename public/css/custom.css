@@ -416,3 +416,43 @@ footer{
 .footer_custom_icon_frame:hover{
 	color: var(--cream);
 }
+/*Footer*/
+
+/*Search*/
+.search_info{
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  padding-top: 1rem;
+}
+
+.search_info_span{
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.search_block{
+  display: flex;
+  align-items: center;
+  margin: 1rem;
+}
+
+.search_block_img {
+  opacity: 1;
+  transition: opacity 1s ease 0s;
+  cursor: pointer;
+}
+
+.search_block_img:hover{
+  opacity: 0.35;
+}
+
+.search_block_text{
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+}
+
+.search_block_text_h3:hover{
+  color: var(--cream);
+}
+/*Search*/

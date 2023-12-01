@@ -149,6 +149,32 @@ class HomeController extends Controller
         ]);
     }
 
+    public function search(Request $request)
+    {
+        $this->validate($request, ['keyword' => 'required'], ['keyword.required' => 'pencarian berita tidak boleh kosong']);
+
+        $contents = DB::table('contents')->select(
+            'id',
+            'tag_ids',
+            'cat_ids',
+            'title',
+            'intro',
+            'image',
+            'image_thumb',
+            'content',
+            'timestamp',
+            'is_active',
+            'url',
+            'created_at',
+            'updated_at'
+        )->where('title', 'like', "%".addslashes($request->keyword)."%")->where('is_active', 1)->OrderBy('timestamp', 'DESC')->paginate(10);
+        return view('public.search', [
+            'title'          => 'Hasil Pencarian',
+            'keyword'        => $request->keyword,
+            'contents'       => !empty($contents->total()) ? $contents : null,
+            'contents_total' => $contents->total()
+        ]);
+    }
     /*football*/
     public function football()
     {

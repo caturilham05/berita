@@ -54,6 +54,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('public.home');
 Route::get('/all', [HomeController::class, 'show_all'])->name('public.all');
 Route::get('/content/{id}/detail/{title}', [HomeController::class, 'content_detail'])->name('public.content_detail');
+Route::get('/search', [HomeController::class, 'search'])->name('public.search');
 
 Route::get('/football', [HomeController::class, 'football'])->name('public.football');
 Route::get('/football/all', [HomeController::class, 'football_show_all'])->name('public.football_all');

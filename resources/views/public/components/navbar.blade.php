@@ -25,10 +25,17 @@
           </ul>
         </li>
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+      <form class="d-flex" action="{{route('public.search')}}" method="GET">
+        <input class="form-control me-2" type="search" placeholder="Cari Berita" aria-label="Search" name="keyword" value="{{$keyword ?? ''}}">
+        <button class="btn btn-outline-success" type="submit">Cari</button>
       </form>
     </div>
   </div>
 </nav>
+<div class="container">
+@error('keyword')
+  <div class="alert alert-danger mt-2">
+    {{ $message }}
+  </div>
+@enderror
+</div>

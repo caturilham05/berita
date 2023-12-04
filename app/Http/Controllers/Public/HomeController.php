@@ -34,8 +34,8 @@ class HomeController extends Controller
         $data = [
             'new'           => $contents[0],
             'new_feeds'     => array_slice($contents, 1, 2, true),
-            'scroll_x'      => array_slice($contents, -10, 10, true),
-            'recomendation' => array_slice($contents, -25, 8, true),
+            'scroll_x'      => array_slice($contents, 30, 10, true),
+            'recomendation' => array_slice($contents, 15, 8, true),
             // 'all'           => $contents
         ];
 

@@ -59,7 +59,7 @@
 							<a href="" class="detail_right_content_list">{{$value->title}}</a>
 						</div>
 					@endforeach
-					<a href="" class="btn_custom btn-lg" style="margin-top: 1rem;">Lihat Semua Berita</a>
+					<a href="{{route('public.all')}}" class="btn_custom btn-lg" style="margin-top: 1rem;">Lihat Semua Berita</a>
 				</div>
 			</div>
 		</div>

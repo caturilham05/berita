@@ -85,9 +85,11 @@ class HomeController extends Controller
                 'updated_at'
             )->where('is_active', 1)->OrderBy('timestamp', 'DESC')->paginate(10);
         }
+
         return view('public.show_all', [
             'title'    => 'Semua Konten Berita',
             'contents' => $contents ?? '',
+            'ondate'   => $request->ondate
         ]);
     }
 

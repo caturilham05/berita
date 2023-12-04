@@ -64,7 +64,7 @@
 			<hr>
 			<div class="recomendation">
 				@foreach ($contents['recomendation'] as $recomendation)
-					<div class="card_custom">
+					<div class="">
 						<a href="{{route('public.content_detail', ['id' => $recomendation->id, 'title' => $recomendation->title])}}">
 						  <img src="{{$recomendation->image_thumb}}" class="recomendation_image" alt="{{$recomendation->title}}">
 						</a>

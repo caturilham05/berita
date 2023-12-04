@@ -7,7 +7,7 @@
 			<div class="indeks_menu_box">
 				<form action="{{!isset($_GET['id']) ? route('public.all') : ($_GET['id'] == 2 ? route('public.motogp_all') : ($_GET['id'] == 6 ? route('public.football_all') : NULL))}}" method="GET">
 					<span class="span_form">Lihat Berdasarkan Tanggal</span>
-					<input type="date" name="ondate" class="input_date" >
+					<input type="date" name="ondate" class="input_date" value="{{$ondate ?? ''}}">
 					<button type="submit" class="btn_custom btn-lg">Cari</button>
 				</form>
 			</div>
@@ -25,9 +25,7 @@
 			</div>
 		@endforeach
     @if (!empty($contents))
-      {{-- <div class="clearfix"> --}}
-      {!! $contents->withQueryString()->links('pagination::bootstrap-5') !!}
-      {{-- </div> --}}
+      {!! $contents->withQueryString()->links('pagination::bootstrap-4') !!}
     @endif
 	</div>
 @endsection

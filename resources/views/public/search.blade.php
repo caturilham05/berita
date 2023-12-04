@@ -16,7 +16,7 @@
 					@foreach ($contents as $item)
 						<div class="search_block">
 							<div class="search_block_img">
-								<img src="{{$item->image_thumb}}">
+								<img src="{{$item->image_thumb}}" class="search_block_img_item">
 							</div>
 							<div class="search_block_text">
 								<small>{{date('d F Y H:i:s', $item->timestamp)}}</small>

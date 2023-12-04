@@ -159,12 +159,12 @@ hr {
 }
 
 .recomendation_section{
-  /*width: 75%;*/
+  /*width: 100%;*/
 }
 
 .recomendation{
 	display: flex;
-  align-items: start;
+  /*align-items: start;*/
 	flex-wrap: wrap;
   gap: 1rem 4rem;
   /*justify-content: center;*/
@@ -173,7 +173,7 @@ hr {
 .recomendation_image {
   opacity: 1;
   transition: opacity 1s ease 0s;
-  width: 100%;
+  /*width: 750px;*/
 }
 
 .recomendation_image:hover{
@@ -204,7 +204,7 @@ hr {
   margin: 1rem;
 }
 
-.indeks .indeks_menu_title{
+.indeks_menu_title{
   color: var(--semiblack);
   font-size: 25px;
   font-weight: bold;
@@ -456,3 +456,80 @@ footer{
   color: var(--cream);
 }
 /*Search*/
+
+@media (max-width: 768px) {
+  .recomendation_image{
+    width: 375px;
+  }
+
+  .card_text_recomendation{
+    width: 100%;
+  }
+
+  .indeks{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .indeks_menu_title{
+    color: var(--semiblack);
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding-bottom: 1rem;
+  }
+
+  .span_form{
+    display: none;
+  }
+
+  .list_all{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list_all_img{
+    width: 330px;
+  }
+
+  .list_all_text{
+    margin: 1px;
+  }
+
+  .pagination_custom{
+    width: 50%;
+  }
+
+  .detail_title{
+    text-align: center;
+    color: var(--semiblack);
+    font-size: 25px;
+    letter-spacing: 0.5px;
+    font-weight: bold;
+  }
+
+  .detail_date{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: var(--abu);
+  }
+
+  .detail_content{
+    padding: 0;
+  }
+
+  .detail_content_img{
+    width: 100% !important;
+  }
+
+  .search_block{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .search_block_img_item{
+    width: 330px;
+    margin-bottom: 1rem;
+  }
+}

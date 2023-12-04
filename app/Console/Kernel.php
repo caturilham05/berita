@@ -12,8 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('app:football-task')->everyMinute();
-        $schedule->command('app:motogp-task')->everyMinute();
+        $schedule->command('app:football-task')->hourly();
+        $schedule->command('app:motogp-task')->hourly();
     }
 
     /**

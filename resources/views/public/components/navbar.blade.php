@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 1.5rem;">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{{route('public.home')}}">Berita Olahraga</a>
+    <a class="navbar-brand" href="{{route('public.home')}}"><img src="{{asset('nama/svg/logo-no-background.svg')}}" class="logo"></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

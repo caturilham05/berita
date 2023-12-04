@@ -35,6 +35,9 @@ hr {
   border: 1.5px solid var(--blue);
 }
 
+.logo{
+  width: 180px;
+}
 
 .head_custom {
   display: flex;

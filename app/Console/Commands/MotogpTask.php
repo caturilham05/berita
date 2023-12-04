@@ -6,21 +6,21 @@ use Illuminate\Console\Command;
 use App\Models\Category;
 use App\Models\Contents;
 
-class FootballTask extends Command
+class MotogpTask extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:football-task';
+    protected $signature = 'app:motogp-task';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'CURL data ke detik.com untuk mendapatkan berita sepakbola terbaru';
+    protected $description = 'CURL data ke detik.com untuk mendapatkan berita motogp terbaru';
 
     /**
      * Execute the console command.
@@ -29,7 +29,7 @@ class FootballTask extends Command
     {
         $data = [
             'url'      => 'https://sport.detik.com',
-            'category' => 6,
+            'category' => 2,
         ];
         $category_name = Category::findOrFail($data['category'])->code;
         if (empty($category_name))

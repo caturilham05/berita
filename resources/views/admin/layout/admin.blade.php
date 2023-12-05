@@ -6,6 +6,7 @@
     <meta name="description" content="Start your development with Meyawo landing page.">
     <meta name="author" content="Devcrud">
     <title>{{$title}}</title>
+    <link rel="icon" href="{{asset('logo/svg/logo-no-background.svg')}}" />
     <!-- font icons -->
     <link rel="stylesheet" href="{{ asset('meyawo/public_html/assets/vendors/themify-icons/css/themify-icons.css') }}">
     <!-- Bootstrap + Meyawo main styles -->

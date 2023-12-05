@@ -12,9 +12,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('app:football-task')->hourly();
-        // $schedule->command('app:motogp-task')->hourly();
-        $schedule->command('app:content-detail-task')->everyMinute()->sendOutputTo('storage/logs/schedule.log');
+        $schedule->command('app:football-task')->hourly()->sendOutputTo('storage/logs/FootballTask.log');
+        $schedule->command('app:motogp-task')->hourly()->sendOutputTo('storage/logs/MotogpTask.log');
+        $schedule->command('app:content-detail-task')->hourly()->sendOutputTo('storage/logs/ContentDetailTask.log');
     }
 
     /**

@@ -12,6 +12,9 @@
                 <a class="link"href="{{route('admin.tag')}}">Tag Scrap</a>
             </li>
             <li class="item">
+                <a class="link"href="{{route('admin.leagues')}}">Leagues</a>
+            </li>
+            <li class="item">
                 <a class="link"href="{{route('admin.settings')}}">Navbar Settings</a>
             </li>
             <li class="item">

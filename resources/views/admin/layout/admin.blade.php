@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset('meyawo/public_html/assets/vendors/themify-icons/css/themify-icons.css') }}">
     <!-- Bootstrap + Meyawo main styles -->
     <link rel="stylesheet" href="{{ asset('meyawo/public_html/assets/css/meyawo.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
@@ -33,6 +34,7 @@
 
     <!-- Meyawo js -->
     <script src="{{ asset('meyawo/public_html/assets/js/meyawo.js') }}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @yield('script')
 </body>
 </html>

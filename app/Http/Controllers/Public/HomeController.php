@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\Contents;
 use App\Models\Category;
 use App\Models\Tags;
+use App\Models\Leagues;
+use App\Models\LeaguesSeasons as LS;
+use App\Models\Countries;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\FunctionHelper;
 
 class HomeController extends Controller
 {
@@ -354,4 +358,85 @@ class HomeController extends Controller
         ]);
     }
     /*motogp*/
+
+    public function test()
+    {
+        $leagues_api   = FunctionHelper::rapidApiFootball('leagues?code=ID', 'GET');
+        $countries_api = FunctionHelper::rapidApiFootball('countries', 'GET');
+        if (empty($leagues_api) || empty($countries_api)) return false;
+
+        $leagues   = [];
+        $seasons   = [];
+        $countries = [];
+
+        foreach ($leagues_api['response'] as $league_response)
+        {
+            $leagues[] = [
+                'id_origin'      => $league_response['league']['id'],
+                'code_countries' => 'ID',
+                'name'           => $league_response['league']['name'],
+                'type'           => $league_response['league']['type'],
+                'logo'           => $league_response['league']['logo']
+            ];
+            foreach ($league_response['seasons'] as $season)
+            {
+                $seasons[$league_response['league']['id']][] =[
+                    'league_id'        => 0,
+                    'league_id_origin' => $league_response['league']['id'],
+                    'year'             => $season['year'],
+                    'start'            => $season['start'],
+                    'end'              => $season['end'],
+                    'current'          => !empty($season['current']) ? 1 : 0
+                ];
+            }
+        }
+
+        foreach ($countries_api['response'] as $countries_response)
+        {
+            $countries[] = [
+                'code' => $countries_response['code'],
+                'name' => $countries_response['name'],
+                'flag' => $countries_response['flag'],
+            ];
+        }
+
+        try {
+            DB::beginTransaction(); // <= Starting the transaction
+            DB::table('leagues')->insert($leagues);
+
+            $leagues_datas = Leagues::select()->whereDate('created_at', date('Y-m-d'))->get()->toArray();
+            if (!empty($leagues_datas))
+            {
+                $seasons_insert = [];
+                foreach ($leagues_datas as $value)
+                {
+                    if (isset($seasons[$value['id_origin']]))
+                    {
+                        foreach ($seasons[$value['id_origin']] as $k_season => $v_season)
+                        {
+                            $seasons_insert[] = [
+                                'league_id'        => $value['id'],
+                                'league_id_origin' => $v_season['league_id_origin'],
+                                'year'             => $v_season['year'],
+                                'start_date'       => $v_season['start'],
+                                'end_date'         => $v_season['end'],
+                                'current'          => $v_season['current'],
+                            ];
+                        }
+                    }
+                }
+            }
+
+            DB::table('leagues_seasons')->insert($seasons_insert);
+            DB::table('countries')->insert($countries);
+
+            DB::commit(); // <= Commit the changes
+            $msg = 'sukses';
+        } catch (Exception $e) {
+            report($e);
+            DB::rollBack(); // <= Rollback in case of an exception
+            $msg = 'gagal';
+        }
+        return $msg;
+    }
 }

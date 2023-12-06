@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:football-task')->hourly()->sendOutputTo('storage/logs/FootballTask.log');
         $schedule->command('app:motogp-task')->hourly()->sendOutputTo('storage/logs/MotogpTask.log');
         $schedule->command('app:content-detail-task')->hourly()->sendOutputTo('storage/logs/ContentDetailTask.log');
+        // $schedule->command('app:countries-task')->hourly()->sendOutputTo('storage/logs/CountriesTask.log');
+        // $schedule->command('app:leagues-task')->hourly()->sendOutputTo('storage/logs/LeaguesTask.log');
     }
 
     /**

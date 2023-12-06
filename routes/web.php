@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ScrapController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\LeaguesController;
 
 use App\Http\Controllers\Public\HomeController;
 
@@ -46,6 +47,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 	Route::get('/admin/dashboard/tag', [TagController::class, 'index'])->name('admin.tag');
 	Route::post('/admin/dashboard/tag/scrap', [TagController::class, 'scrap'])->name('admin.tag.scrap');
+
+	Route::get('/admin/dashboard/league', [LeaguesController::class, 'index'])->name('admin.leagues');
+	Route::get('/admin/dashboard/league/add', [LeaguesController::class, 'add'])->name('admin.leagues.add');
+	Route::post('/admin/dashboard/league/add', [LeaguesController::class, 'process'])->name('admin.leagues.process');
 });
 /*Admin*/
 
@@ -60,4 +65,7 @@ Route::get('/football', [HomeController::class, 'football'])->name('public.footb
 Route::get('/football/all', [HomeController::class, 'football_show_all'])->name('public.football_all');
 Route::get('/moto-gp', [HomeController::class, 'motogp'])->name('public.motogp');
 Route::get('/moto-gp/all/', [HomeController::class, 'motogp_show_all'])->name('public.motogp_all');
+
+
+Route::get('/test', [HomeController::class, 'test'])->name('public.test');
 /*Public*/

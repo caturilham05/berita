@@ -66,6 +66,10 @@ Route::get('/football/all', [HomeController::class, 'football_show_all'])->name(
 Route::get('/moto-gp', [HomeController::class, 'motogp'])->name('public.motogp');
 Route::get('/moto-gp/all/', [HomeController::class, 'motogp_show_all'])->name('public.motogp_all');
 
+Route::get('/standing/{id}/detail/{title}', [HomeController::class, 'football_standing_detail'])->name('public.standing');
 
 Route::get('/test', [HomeController::class, 'test'])->name('public.test');
+Route::get('/football/schedule/change/ajax/{id_origin}', [HomeController::class, 'football_schedule_change'])->name('public.football_schedule_change');
+Route::get('/football/standing/change/ajax/{id_origin}', [HomeController::class, 'football_standing_change'])->name('public.football_standing_change');
+
 /*Public*/

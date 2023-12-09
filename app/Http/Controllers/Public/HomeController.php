@@ -452,13 +452,13 @@ class HomeController extends Controller
                         'teams' => [
                             'home' => [
                                 'id' => 1,
-                                'name' => 'westham sdfsdf',
+                                'name' => 'westham',
                                 'logo' => 'https://media-4.api-sports.io/football/teams/48.png',
                                 'winner' => null
                             ],
                             'away' => [
                                 'id' => 2,
-                                'name' => 'newcastle sdknfskdlnf',
+                                'name' => 'newcastle',
                                 'logo' => 'https://media-4.api-sports.io/football/teams/34.png',
                                 'winner' => null
                             ]
@@ -506,13 +506,13 @@ class HomeController extends Controller
                         'teams' => [
                             'home' => [
                                 'id' => 1,
-                                'name' => 'westham sdjfskd fjsdf',
+                                'name' => 'westham',
                                 'logo' => 'https://media-4.api-sports.io/football/teams/48.png',
                                 'winner' => null
                             ],
                             'away' => [
                                 'id' => 2,
-                                'name' => 'newcastle slkdfnlsd f',
+                                'name' => 'newcastle baru',
                                 'logo' => 'https://media-4.api-sports.io/football/teams/34.png',
                                 'winner' => null
                             ]
@@ -542,7 +542,7 @@ class HomeController extends Controller
                     ],
                 ];
             break;
-            
+
             default:
                 return;
             break;
@@ -682,5 +682,344 @@ class HomeController extends Controller
         }
 
         return $output;
+    }
+
+    public function football_standing_detail(Request $request)
+    {
+        dd($request->id, $request->title);
+    }
+
+    public function football_schedule_change(Request $request)
+    {
+        switch (env('APP_ENV'))
+        {
+            case 'live':
+                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', $request->id_origin)->where('year', date('Y'))->first();
+
+                if (empty($ls))
+                {
+                    return response()->json([
+                        'status'  => 404,
+                        'message' => 'data not found',
+                        'result'  => []
+                    ], 200);
+                }
+
+                $uri         = sprintf('fixtures?season=%s&league=%s', $ls['year'], $ls['league_id_origin']);
+                $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
+                $output[]    = $competition['response'] ?? [];
+
+                // Define the date and time string in the Indonesian timezone
+                $dateString = date('Y-m-d H:i:s');
+                $timezoneIndonesia = new DateTimeZone('Asia/Jakarta'); // Use the appropriate timezone for Indonesia
+
+                // Create a DateTime object with the Indonesian timezone
+                $dateTimeIndonesia = new DateTime($dateString, $timezoneIndonesia);
+
+                // Convert the DateTime object to UTC timezone
+                $timezoneUTC = new DateTimeZone('UTC');
+                $dateTimeUTC = new DateTime();
+                $dateTimeUTC->setTimezone($timezoneUTC);
+                $dateTimeUTC->setTimestamp($dateTimeIndonesia->getTimestamp());
+
+                // Format the result in UTC
+                $utcDateString = $dateTimeUTC->format('Y-m-d H:i:s');
+
+                // convert to timestamp
+                $utcDateString = strtotime($utcDateString);
+
+                $filteredData = [];
+                $groupedData  = [];
+
+                foreach ($output as $key => $value)
+                {
+                    foreach ($value as $item)
+                    {
+                        $fixtureDateTimestamp = strtotime($item['fixture']['date']);
+                        $leagueId             = $item['league']['id'];
+                        
+                        // Check if the fixture date is now or in the future
+                        if ($fixtureDateTimestamp >= $utcDateString)
+                        {
+                            if (!isset($groupedData[$leagueId])) $groupedData[$leagueId] = [];
+                            $groupedData[$leagueId][] = $item;
+                        }
+                    }
+                }
+            break;
+
+            case 'local':
+                $groupedData[$request->id_origin] = [
+                    [
+                        'fixture' => [
+                            'id'        => 1,
+                            'referee'   => 'lorem dari ajax',
+                            'timezone'  => 'UTC',
+                            'date'      => '2023-12-01T15:00:00+00:00',
+                            "timestamp" => 1702134000
+                        ],
+                        'league' => [
+                            'id'      => 39,
+                            "name"    => "Premier League",
+                            "country" => "England",
+                            "logo"    => "https://media-4.api-sports.io/football/leagues/39.png",
+                            "flag"    => "https://media-4.api-sports.io/flags/gb.svg",
+                            "season"  => 2023,
+                            "round"   => "Regular Season - 15",
+                        ],
+                        'teams' => [
+                            'home' => [
+                                'id' => 1,
+                                'name' => 'westham',
+                                'logo' => 'https://media-4.api-sports.io/football/teams/48.png',
+                                'winner' => null
+                            ],
+                            'away' => [
+                                'id' => 2,
+                                'name' => 'newcastle',
+                                'logo' => 'https://media-4.api-sports.io/football/teams/34.png',
+                                'winner' => null
+                            ]
+                        ],
+                        'goals' => [
+                            'home' => 2,
+                            'away' => 2
+                        ],
+                        'score' => [
+                            'halftime' => [
+                                'home' => 1,
+                                'away' => 0
+                            ],
+                            'fulltime' => [
+                                'home' => 2,
+                                'away' => 2
+                            ],
+                            'extratime' => [
+                                'home' => null,
+                                'away' => null
+                            ],
+                            'pinalty' => [
+                                'home' => null,
+                                'away' => null
+                            ],
+                        ]
+                    ],
+                    [
+                        'fixture' => [
+                            'id'        => 1,
+                            'referee'   => 'lorem dari ajax 2',
+                            'timezone'  => 'UTC',
+                            'date'      => '2023-12-11T15:00:00+00:00',
+                            "timestamp" => 1702134000
+                        ],
+                        'league' => [
+                            'id'      => 140,
+                            "name"    => "Premier League",
+                            "country" => "England",
+                            "logo"    => "https://media-4.api-sports.io/football/leagues/39.png",
+                            "flag"    => "https://media-4.api-sports.io/flags/gb.svg",
+                            "season"  => 2023,
+                            "round"   => "Regular Season - 15",
+                        ],
+                        'teams' => [
+                            'home' => [
+                                'id' => 1,
+                                'name' => 'westham',
+                                'logo' => 'https://media-4.api-sports.io/football/teams/48.png',
+                                'winner' => null
+                            ],
+                            'away' => [
+                                'id' => 2,
+                                'name' => 'newcastle baru',
+                                'logo' => 'https://media-4.api-sports.io/football/teams/34.png',
+                                'winner' => null
+                            ]
+                        ],
+                        'goals' => [
+                            'home' => 2,
+                            'away' => 2
+                        ],
+                        'score' => [
+                            'halftime' => [
+                                'home' => 1,
+                                'away' => 0
+                            ],
+                            'fulltime' => [
+                                'home' => 2,
+                                'away' => 2
+                            ],
+                            'extratime' => [
+                                'home' => null,
+                                'away' => null
+                            ],
+                            'pinalty' => [
+                                'home' => null,
+                                'away' => null
+                            ],
+                        ]
+                    ],
+                ];
+            break;
+            
+            default:
+                return response()->json([
+                    'status'  => 404,
+                    'message' => 'not found',
+                    'result'  => []
+                ], 404);
+            break;
+        }
+
+        return response()->json([
+            'status'  => 200,
+            'message' => 'success',
+            'result'  => $groupedData
+        ], 200);
+    }
+
+    public function football_standing_change(Request $request)
+    {
+        switch (env('APP_ENV'))
+        {
+            case 'live':
+                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', $request->id_origin)->where('year', date('Y'))->first();
+
+                if (empty($ls))
+                {
+                    return response()->json([
+                        'status'  => 404,
+                        'message' => 'data not found',
+                        'result'  => []
+                    ], 200);
+                }
+
+                $uri                         = sprintf('standings?season=%s&league=%s', $ls['year'], $ls['league_id_origin']);
+                $competition                 = FunctionHelper::rapidApiFootball($uri, 'GET');
+                $output[$request->id_origin] = $competition['response'] ?? [];
+            break;
+
+            case 'local':
+                $output[$request->id_origin] = [
+                    [
+                        'league'   => [
+                            'id'        => 39,
+                            "name"      => "Premier League",
+                            "country"   => "England",
+                            "logo"      => "https://media-4.api-sports.io/football/leagues/39.png",
+                            "flag"      => "https://media-4.api-sports.io/flags/gb.svg",
+                            "season"    => 2023,
+                            'standings' => [
+                                [
+                                    [
+                                        'rank' => 1,
+                                        'team' => [
+                                            'id'   => 1,
+                                            'name' => 'Liverpool',
+                                            'logo' => 'lorem',
+                                        ],
+                                        'points'      => 73,
+                                        'goalsDiff'   => 45,
+                                        'group'       => 'Premier League',
+                                        'form'        => 'WWW',
+                                        'status'      => 'same',
+                                        'description' => 'Promotion - Champions League (Group Stage)',
+                                        'all' => [
+                                            'played' => 25,
+                                            'win'    => 24,
+                                            'draw'   => 1,
+                                            'lose'   => 0,
+                                            'goals'  => [
+                                                'for'     => 60,
+                                                'againts' => 15
+                                            ]
+                                        ],
+                                        'home' => [
+                                            'played' => 13,
+                                            'win'    => 13,
+                                            'draw'   => 0,
+                                            'lose'   => 0,
+                                            'goals'  => [
+                                                'for'     => 35,
+                                                'againts' => 9
+                                            ]
+                                        ],
+                                        'away' => [
+                                            'played' => 12,
+                                            'win'    => 11,
+                                            'draw'   => 1,
+                                            'lose'   => 0,
+                                            'goals'  => [
+                                                'for'     => 25,
+                                                'againts' => 6
+                                            ]
+                                        ],
+                                        'update' => '2020-02-02T00:00:00+00:00'
+                                    ],
+                                    [
+                                        'rank' => 2,
+                                        'team' => [
+                                            'id'   => 3,
+                                            'name' => 'MU',
+                                            'logo' => 'lorem',
+                                        ],
+                                        'points'      => 73,
+                                        'goalsDiff'   => 45,
+                                        'group'       => 'Premier League',
+                                        'form'        => 'WWW',
+                                        'status'      => 'same',
+                                        'description' => 'Promotion - Champions League (Group Stage)',
+                                        'all' => [
+                                            'played' => 25,
+                                            'win'    => 24,
+                                            'draw'   => 1,
+                                            'lose'   => 0,
+                                            'goals'  => [
+                                                'for'     => 60,
+                                                'againts' => 15
+                                            ]
+                                        ],
+                                        'home' => [
+                                            'played' => 13,
+                                            'win'    => 13,
+                                            'draw'   => 0,
+                                            'lose'   => 0,
+                                            'goals'  => [
+                                                'for'     => 35,
+                                                'againts' => 9
+                                            ]
+                                        ],
+                                        'away' => [
+                                            'played' => 12,
+                                            'win'    => 11,
+                                            'draw'   => 1,
+                                            'lose'   => 0,
+                                            'goals'  => [
+                                                'for'     => 25,
+                                                'againts' => 6
+                                            ]
+                                        ],
+                                        'update' => '2020-02-02T00:00:00+00:00'
+                                    ],
+                                ]
+                            ]
+                        ],
+                    ]
+                ];
+            break;
+            
+            default:
+                return response()->json([
+                    'status'  => 404,
+                    'message' => 'not found',
+                    'result'  => []
+                ], 404);
+            break;
+        }
+
+        return response()->json([
+            'status'  => 200,
+            'message' => 'success',
+            'result'  => $output
+        ], 200);
     }
 }

@@ -431,116 +431,7 @@ class HomeController extends Controller
             break;
 
             case 'local':
-                $groupedData[] = [
-                    [
-                        'fixture' => [
-                            'id'        => 1,
-                            'referee'   => 'lorem',
-                            'timezone'  => 'UTC',
-                            'date'      => '2023-12-01T15:00:00+00:00',
-                            "timestamp" => 1702134000
-                        ],
-                        'league' => [
-                            'id'      => 39,
-                            "name"    => "Premier League",
-                            "country" => "England",
-                            "logo"    => "https://media-4.api-sports.io/football/leagues/39.png",
-                            "flag"    => "https://media-4.api-sports.io/flags/gb.svg",
-                            "season"  => 2023,
-                            "round"   => "Regular Season - 15",
-                        ],
-                        'teams' => [
-                            'home' => [
-                                'id' => 1,
-                                'name' => 'westham',
-                                'logo' => 'https://media-4.api-sports.io/football/teams/48.png',
-                                'winner' => null
-                            ],
-                            'away' => [
-                                'id' => 2,
-                                'name' => 'newcastle',
-                                'logo' => 'https://media-4.api-sports.io/football/teams/34.png',
-                                'winner' => null
-                            ]
-                        ],
-                        'goals' => [
-                            'home' => 2,
-                            'away' => 2
-                        ],
-                        'score' => [
-                            'halftime' => [
-                                'home' => 1,
-                                'away' => 0
-                            ],
-                            'fulltime' => [
-                                'home' => 2,
-                                'away' => 2
-                            ],
-                            'extratime' => [
-                                'home' => null,
-                                'away' => null
-                            ],
-                            'pinalty' => [
-                                'home' => null,
-                                'away' => null
-                            ],
-                        ]
-                    ],
-                    [
-                        'fixture' => [
-                            'id'        => 1,
-                            'referee'   => 'lorem',
-                            'timezone'  => 'UTC',
-                            'date'      => '2023-12-11T15:00:00+00:00',
-                            "timestamp" => 1702134000
-                        ],
-                        'league' => [
-                            'id'      => 140,
-                            "name"    => "Premier League",
-                            "country" => "England",
-                            "logo"    => "https://media-4.api-sports.io/football/leagues/39.png",
-                            "flag"    => "https://media-4.api-sports.io/flags/gb.svg",
-                            "season"  => 2023,
-                            "round"   => "Regular Season - 15",
-                        ],
-                        'teams' => [
-                            'home' => [
-                                'id' => 1,
-                                'name' => 'westham',
-                                'logo' => 'https://media-4.api-sports.io/football/teams/48.png',
-                                'winner' => null
-                            ],
-                            'away' => [
-                                'id' => 2,
-                                'name' => 'newcastle baru',
-                                'logo' => 'https://media-4.api-sports.io/football/teams/34.png',
-                                'winner' => null
-                            ]
-                        ],
-                        'goals' => [
-                            'home' => 2,
-                            'away' => 2
-                        ],
-                        'score' => [
-                            'halftime' => [
-                                'home' => 1,
-                                'away' => 0
-                            ],
-                            'fulltime' => [
-                                'home' => 2,
-                                'away' => 2
-                            ],
-                            'extratime' => [
-                                'home' => null,
-                                'away' => null
-                            ],
-                            'pinalty' => [
-                                'home' => null,
-                                'away' => null
-                            ],
-                        ]
-                    ],
-                ];
+                $groupedData = FunctionHelper::football_schedule_dummy();                
             break;
 
             default:
@@ -549,144 +440,6 @@ class HomeController extends Controller
         }
 
         return $groupedData;
-    }
-
-    public function football_standing()
-    {
-        $output = [];
-        switch (env('APP_ENV'))
-        {
-            case 'live':
-                $ls     = LS::select('league_id_origin', 'year')->whereIn('league_id_origin', [39])->where('year', date('Y'))->get()->toArray();
-                if (empty($ls)) return false;
-                foreach ($ls as $key => $value)
-                {
-                    $uri         = sprintf('standings?season=%s&league=%s', $value['year'], $value['league_id_origin']);
-                    $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
-                    $output[]    = $competition['response'] ?? [];
-                }
-            break;
-
-            case 'local':
-                $output[] = [
-                    [
-                        'league'   => [
-                            'id'        => 39,
-                            "name"      => "Premier League",
-                            "country"   => "England",
-                            "logo"      => "https://media-4.api-sports.io/football/leagues/39.png",
-                            "flag"      => "https://media-4.api-sports.io/flags/gb.svg",
-                            "season"    => 2023,
-                            'standings' => [
-                                [
-                                    [
-                                        'rank' => 1,
-                                        'team' => [
-                                            'id'   => 1,
-                                            'name' => 'Liverpool',
-                                            'logo' => 'lorem',
-                                        ],
-                                        'points'      => 73,
-                                        'goalsDiff'   => 45,
-                                        'group'       => 'Premier League',
-                                        'form'        => 'WWW',
-                                        'status'      => 'same',
-                                        'description' => 'Promotion - Champions League (Group Stage)',
-                                        'all' => [
-                                            'played' => 25,
-                                            'win'    => 24,
-                                            'draw'   => 1,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 60,
-                                                'againts' => 15
-                                            ]
-                                        ],
-                                        'home' => [
-                                            'played' => 13,
-                                            'win'    => 13,
-                                            'draw'   => 0,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 35,
-                                                'againts' => 9
-                                            ]
-                                        ],
-                                        'away' => [
-                                            'played' => 12,
-                                            'win'    => 11,
-                                            'draw'   => 1,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 25,
-                                                'againts' => 6
-                                            ]
-                                        ],
-                                        'update' => '2020-02-02T00:00:00+00:00'
-                                    ],
-                                    [
-                                        'rank' => 2,
-                                        'team' => [
-                                            'id'   => 3,
-                                            'name' => 'MU',
-                                            'logo' => 'lorem',
-                                        ],
-                                        'points'      => 73,
-                                        'goalsDiff'   => 45,
-                                        'group'       => 'Premier League',
-                                        'form'        => 'WWW',
-                                        'status'      => 'same',
-                                        'description' => 'Promotion - Champions League (Group Stage)',
-                                        'all' => [
-                                            'played' => 25,
-                                            'win'    => 24,
-                                            'draw'   => 1,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 60,
-                                                'againts' => 15
-                                            ]
-                                        ],
-                                        'home' => [
-                                            'played' => 13,
-                                            'win'    => 13,
-                                            'draw'   => 0,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 35,
-                                                'againts' => 9
-                                            ]
-                                        ],
-                                        'away' => [
-                                            'played' => 12,
-                                            'win'    => 11,
-                                            'draw'   => 1,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 25,
-                                                'againts' => 6
-                                            ]
-                                        ],
-                                        'update' => '2020-02-02T00:00:00+00:00'
-                                    ],
-                                ]
-                            ]
-                        ],
-                    ]
-                ];
-            break;
-            
-            default:
-                return;
-            break;
-        }
-
-        return $output;
-    }
-
-    public function football_standing_detail(Request $request)
-    {
-        dd($request->id, $request->title);
     }
 
     public function football_schedule_change(Request $request)
@@ -749,116 +502,7 @@ class HomeController extends Controller
             break;
 
             case 'local':
-                $groupedData[$request->id_origin] = [
-                    [
-                        'fixture' => [
-                            'id'        => 1,
-                            'referee'   => 'lorem dari ajax',
-                            'timezone'  => 'UTC',
-                            'date'      => '2023-12-01T15:00:00+00:00',
-                            "timestamp" => 1702134000
-                        ],
-                        'league' => [
-                            'id'      => 39,
-                            "name"    => "Premier League",
-                            "country" => "England",
-                            "logo"    => "https://media-4.api-sports.io/football/leagues/39.png",
-                            "flag"    => "https://media-4.api-sports.io/flags/gb.svg",
-                            "season"  => 2023,
-                            "round"   => "Regular Season - 15",
-                        ],
-                        'teams' => [
-                            'home' => [
-                                'id' => 1,
-                                'name' => 'westham',
-                                'logo' => 'https://media-4.api-sports.io/football/teams/48.png',
-                                'winner' => null
-                            ],
-                            'away' => [
-                                'id' => 2,
-                                'name' => 'newcastle',
-                                'logo' => 'https://media-4.api-sports.io/football/teams/34.png',
-                                'winner' => null
-                            ]
-                        ],
-                        'goals' => [
-                            'home' => 2,
-                            'away' => 2
-                        ],
-                        'score' => [
-                            'halftime' => [
-                                'home' => 1,
-                                'away' => 0
-                            ],
-                            'fulltime' => [
-                                'home' => 2,
-                                'away' => 2
-                            ],
-                            'extratime' => [
-                                'home' => null,
-                                'away' => null
-                            ],
-                            'pinalty' => [
-                                'home' => null,
-                                'away' => null
-                            ],
-                        ]
-                    ],
-                    [
-                        'fixture' => [
-                            'id'        => 1,
-                            'referee'   => 'lorem dari ajax 2',
-                            'timezone'  => 'UTC',
-                            'date'      => '2023-12-11T15:00:00+00:00',
-                            "timestamp" => 1702134000
-                        ],
-                        'league' => [
-                            'id'      => 140,
-                            "name"    => "Premier League",
-                            "country" => "England",
-                            "logo"    => "https://media-4.api-sports.io/football/leagues/39.png",
-                            "flag"    => "https://media-4.api-sports.io/flags/gb.svg",
-                            "season"  => 2023,
-                            "round"   => "Regular Season - 15",
-                        ],
-                        'teams' => [
-                            'home' => [
-                                'id' => 1,
-                                'name' => 'westham',
-                                'logo' => 'https://media-4.api-sports.io/football/teams/48.png',
-                                'winner' => null
-                            ],
-                            'away' => [
-                                'id' => 2,
-                                'name' => 'newcastle baru',
-                                'logo' => 'https://media-4.api-sports.io/football/teams/34.png',
-                                'winner' => null
-                            ]
-                        ],
-                        'goals' => [
-                            'home' => 2,
-                            'away' => 2
-                        ],
-                        'score' => [
-                            'halftime' => [
-                                'home' => 1,
-                                'away' => 0
-                            ],
-                            'fulltime' => [
-                                'home' => 2,
-                                'away' => 2
-                            ],
-                            'extratime' => [
-                                'home' => null,
-                                'away' => null
-                            ],
-                            'pinalty' => [
-                                'home' => null,
-                                'away' => null
-                            ],
-                        ]
-                    ],
-                ];
+                $groupedData = FunctionHelper::football_schedule_dummy($request->id_origin);
             break;
             
             default:
@@ -875,6 +519,116 @@ class HomeController extends Controller
             'message' => 'success',
             'result'  => $groupedData
         ], 200);
+    }
+
+    public function football_standing()
+    {
+        $output = [];
+        switch (env('APP_ENV'))
+        {
+            case 'live':
+                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', [39])->where('year', date('Y'))->get();
+                if (empty($ls)) return false;
+                foreach ($ls as $key => $value)
+                {
+                    $uri         = sprintf('standings?season=%s&league=%s', $value['year'], $value['league_id_origin']);
+                    $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
+                    $output[]    = $competition['response'] ?? [];
+                }
+            break;
+
+            case 'local':
+                $output = FunctionHelper::football_standing_dummy();
+            break;
+            
+            default:
+                return;
+            break;
+        }
+
+        return $output;
+    }
+
+    public function football_standing_view(Request $request)
+    {
+        switch (env('APP_ENV'))
+        {
+            case 'live':
+                $year = LS::select('year')->where('league_id_origin', $request->id)->where('year', date('Y'))->value('year');
+                if (empty($year)) abort(404);
+
+                $uri         = sprintf('standings?season=%s&league=%s', $year, $request->id);
+                $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
+
+                $uri_player         = sprintf('players/topscorers?season=%s&league=%s', $year, $request->id);
+                $competition_player = FunctionHelper::rapidApiFootball($uri_player, 'GET');
+
+                $output[]        = $competition['response'] ?? [];
+                $output_player[] = $competition_player['response'] ?? [];
+
+                if (!empty($output))
+                {
+                    foreach ($output as $key => $value)
+                    {
+                        foreach ($value as $k_league => $league)
+                        {
+                            foreach ($league['league']['standings'] as $k_standings => $standings)
+                            {
+                                foreach ($standings as $k_standing => $standing)
+                                {
+                                    $standing['form'] = str_split($standing['form']);
+                                    foreach ($standing['form'] as $k_form => $form)
+                                    {
+                                        switch ($form)
+                                        {
+                                            case 'W':
+                                                $color = '#0da200';
+                                            break;
+
+                                            case 'L':
+                                                $color = '#ff0000';
+                                            break;
+
+                                            case 'D':
+                                                $color = '#404040';
+                                            break;
+                                            
+                                            default:
+                                                $color = '#e4e5e6';
+                                            break;
+                                        }
+                                        $standing['form_format'][] = [
+                                            'text'  => $form,
+                                            'color' => $color
+                                        ];
+                                    }
+                                    unset($standing['form']);
+                                    $standing['form'] = $standing['form_format'];
+                                    unset($standing['form_format']);
+                                    $output[$key][$k_league]['league']['standings'][$k_standings][$k_standing]['form'] = $standing['form'];
+                                }
+                            }
+                        }
+                    }
+                }
+            break;
+
+            case 'local':
+                $output        = FunctionHelper::football_standing_dummy($request->id);
+                $output_player = FunctionHelper::statistic_player_dummy($request->id);
+            break;
+            
+            default:
+                return;
+            break;
+        }
+
+        return view('public.football.standing', [
+            'title'         => 'Klasemen',
+            'league'        => $request->title,
+            'result'        => $output ?? [],
+            'result_player' => $output_player ?? [],
+        ]);
     }
 
     public function football_standing_change(Request $request)
@@ -896,121 +650,95 @@ class HomeController extends Controller
                 $uri                         = sprintf('standings?season=%s&league=%s', $ls['year'], $ls['league_id_origin']);
                 $competition                 = FunctionHelper::rapidApiFootball($uri, 'GET');
                 $output[$request->id_origin] = $competition['response'] ?? [];
+
+                if (!empty($output))
+                {
+                    foreach ($output as $key => $value)
+                    {
+                        foreach ($value as $k_league => $league)
+                        {
+                            foreach ($league['league']['standings'] as $k_standings => $standings)
+                            {
+                                foreach ($standings as $k_standing => $standing)
+                                {
+                                    $standing['form'] = str_split($standing['form']);
+                                    foreach ($standing['form'] as $k_form => $form)
+                                    {
+                                        switch ($form)
+                                        {
+                                            case 'W':
+                                                $color = '#0da200';
+                                            break;
+
+                                            case 'L':
+                                                $color = '#ff0000';
+                                            break;
+
+                                            case 'D':
+                                                $color = '#404040';
+                                            break;
+                                            
+                                            default:
+                                                $color = '#e4e5e6';
+                                            break;
+                                        }
+                                        $standing['form_format'][] = [
+                                            'text'  => $form,
+                                            'color' => $color
+                                        ];
+                                    }
+                                    unset($standing['form']);
+                                    $standing['form'] = $standing['form_format'];
+                                    unset($standing['form_format']);
+                                    $output[$key][$k_league]['league']['standings'][$k_standings][$k_standing]['form'] = $standing['form'];
+                                }
+                            }
+                        }
+                    }
+                }
             break;
 
             case 'local':
-                $output[$request->id_origin] = [
-                    [
-                        'league'   => [
-                            'id'        => 39,
-                            "name"      => "Premier League",
-                            "country"   => "England",
-                            "logo"      => "https://media-4.api-sports.io/football/leagues/39.png",
-                            "flag"      => "https://media-4.api-sports.io/flags/gb.svg",
-                            "season"    => 2023,
-                            'standings' => [
-                                [
-                                    [
-                                        'rank' => 1,
-                                        'team' => [
-                                            'id'   => 1,
-                                            'name' => 'Liverpool',
-                                            'logo' => 'lorem',
-                                        ],
-                                        'points'      => 73,
-                                        'goalsDiff'   => 45,
-                                        'group'       => 'Premier League',
-                                        'form'        => 'WWW',
-                                        'status'      => 'same',
-                                        'description' => 'Promotion - Champions League (Group Stage)',
-                                        'all' => [
-                                            'played' => 25,
-                                            'win'    => 24,
-                                            'draw'   => 1,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 60,
-                                                'againts' => 15
-                                            ]
-                                        ],
-                                        'home' => [
-                                            'played' => 13,
-                                            'win'    => 13,
-                                            'draw'   => 0,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 35,
-                                                'againts' => 9
-                                            ]
-                                        ],
-                                        'away' => [
-                                            'played' => 12,
-                                            'win'    => 11,
-                                            'draw'   => 1,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 25,
-                                                'againts' => 6
-                                            ]
-                                        ],
-                                        'update' => '2020-02-02T00:00:00+00:00'
-                                    ],
-                                    [
-                                        'rank' => 2,
-                                        'team' => [
-                                            'id'   => 3,
-                                            'name' => 'MU',
-                                            'logo' => 'lorem',
-                                        ],
-                                        'points'      => 73,
-                                        'goalsDiff'   => 45,
-                                        'group'       => 'Premier League',
-                                        'form'        => 'WWW',
-                                        'status'      => 'same',
-                                        'description' => 'Promotion - Champions League (Group Stage)',
-                                        'all' => [
-                                            'played' => 25,
-                                            'win'    => 24,
-                                            'draw'   => 1,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 60,
-                                                'againts' => 15
-                                            ]
-                                        ],
-                                        'home' => [
-                                            'played' => 13,
-                                            'win'    => 13,
-                                            'draw'   => 0,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 35,
-                                                'againts' => 9
-                                            ]
-                                        ],
-                                        'away' => [
-                                            'played' => 12,
-                                            'win'    => 11,
-                                            'draw'   => 1,
-                                            'lose'   => 0,
-                                            'goals'  => [
-                                                'for'     => 25,
-                                                'againts' => 6
-                                            ]
-                                        ],
-                                        'update' => '2020-02-02T00:00:00+00:00'
-                                    ],
-                                ]
-                            ]
-                        ],
-                    ]
-                ];
+                $output = FunctionHelper::football_standing_dummy($request->id_origin);
             break;
             
             default:
                 return response()->json([
                     'status'  => 404,
                     'message' => 'not found',
+                    'result'  => []
+                ], 404);
+            break;
+        }
+
+        return response()->json([
+            'status'  => 200,
+            'message' => 'success',
+            'result'  => $output
+        ], 200);
+    }
+
+
+    public function football_statistic_player_change(Request $request)
+    {
+        switch (env('APP_ENV'))
+        {
+            case 'live':
+                $year = LS::select('year')->where('league_id_origin', $request->id)->where('year', date('Y'))->value('year');
+                if (empty($year)) abort(404);
+                $uri         = sprintf('players/topscorers?season=%s&league=%s', $year, $request->id);
+                $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
+                $output[]    = $competition['response'] ?? [];
+            break;
+            
+            case 'local':
+                $output = FunctionHelper::statistic_player_dummy($request->id);
+            break;
+            
+            default:
+                return response()->json([
+                    'status'  => 404,
+                    'message' => 'invalid action',
                     'result'  => []
                 ], 404);
             break;

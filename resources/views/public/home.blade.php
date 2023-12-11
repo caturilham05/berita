@@ -130,7 +130,8 @@
 									@endforeach
 								@endif
 							</tbody>
-						</table>						
+						</table>
+						<div id="loading_schedule_mini"></div>
 					</div>
 				</div>
 			</div>
@@ -204,6 +205,7 @@
 						@endforeach
 					@endif
 				</div>
+				<div id="loading_schedule_scroll"></div>
 			</div>
 			<div class="col-md-3">
 				<hr>
@@ -220,7 +222,8 @@
 					  </div>
 					</form>
 				</div>
-				@if (!empty($contents['football_standing']))				
+
+				@if (!empty($contents['football_standing']))
 					<div class="table-wrapper">
 				    <table class="fl-table" id="standing_table">
 			        <thead>
@@ -248,6 +251,7 @@
 			        	@endforeach
 			        </tbody>
 				    </table>
+					<div id="loading_standing"></div>
 					</div>
 					<a href="{{route('public.standing', ['id' => 39, 'title' => 'Liga Inggris'])}}" id="standing_btn" class="schedule_btn_tbl" style="margin-top: 1rem; box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 )">SELENGKAPNYA</a>
 				@endif
@@ -260,6 +264,10 @@
 	<script>
 	  $(document).ready(function(){
 			$('#schedule_mini').on('change',(event) => {
+				for (let i = 0; i < 5; i++) {
+				  $('#loading_schedule_mini').append('<div class="skeleton-thq60keltlg"></div>');
+				}
+				$('#schedule_mini_table tbody').empty();
 				let league_id_origin = event.target.value;
 				$.ajax({
 					url: `football/schedule/change/ajax/${league_id_origin}`,
@@ -268,7 +276,7 @@
 					success:function(response){
 						if (response.status !== 200) return;
 						if (response.result[league_id_origin].length === 0) return;
-						$('#schedule_mini_table tbody').empty();
+						$('#loading_schedule_mini').empty();
 						response.result[league_id_origin].map((schedule, k) => {
 							if (k < 5)
 							{
@@ -303,6 +311,10 @@
 			});
 
 			$('#schedule').on('change', (event) => {
+				for (let i = 0; i < 5; i++) {
+				  $('#loading_schedule_scroll').append('<div class="skeleton-thq60keltlg"></div>');
+				}
+				$('#schedule_scroll').empty();
 				let league_id_origin = event.target.value;
 				$.ajax({
 					url: `football/schedule/change/ajax/${league_id_origin}`,
@@ -311,7 +323,7 @@
 					success:function(response){
 						if (response.status !== 200) return;
 						if (response.result[league_id_origin].length === 0) return;
-						$('#schedule_scroll').empty();
+						$('#loading_schedule_scroll').empty();
 						response.result[league_id_origin].map((schedule, k) => {
 							if (k < 5)
 							{
@@ -346,6 +358,12 @@
 				let league_name      = $("option:selected", this)[0].innerText
 				let url              = "{{url()->current()}}"
 				let urlFull          = `${url}/standing/${league_id_origin}/detail/${encodeURI(league_name)}`
+
+				for (let i = 0; i < 5; i++) {
+				  $('#loading_standing').append('<div class="skeleton-thq60keltlg"></div>');
+				}
+				$('#standing_table tbody').empty();
+
 				try{
 					document.getElementById('standing_btn').href = urlFull
 					const fetch = await $.ajax({
@@ -356,7 +374,7 @@
 
 					if (fetch.status !== 200) return;
 					if (fetch.result[league_id_origin].length === 0) return;
-					$('#standing_table tbody').empty();
+				  $('#loading_standing').empty();
 					fetch.result[league_id_origin].map((standing, k) => {
 						standing.league.standings.map((v,i) => {
 							v.map((final, final_k) => {

@@ -12,6 +12,7 @@ use App\Models\LeaguesSeasons as LS;
 use App\Models\Countries;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\FunctionHelper;
+use Illuminate\Support\Facades\Cache;
 use DateTime;
 use DateTimeZone;
 
@@ -20,22 +21,31 @@ class HomeController extends Controller
 
     public function index()
     {
-        $contents = DB::table('contents')->select(
-            'id',
-            'tag_ids',
-            'cat_ids',
-            'title',
-            'intro',
-            'image',
-            'image_thumb',
-            'images',
-            'content',
-            'timestamp',
-            'is_active',
-            'url',
-            'created_at',
-            'updated_at'
-        )->where('is_active',1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->get()->toArray();
+        if (Cache::has('contents'))
+        {
+            $contents = Cache::get('contents');
+        }
+        else
+        {
+            $contents = DB::table('contents')->select(
+                'id',
+                'tag_ids',
+                'cat_ids',
+                'title',
+                'intro',
+                'image',
+                'image_thumb',
+                'images',
+                'content',
+                'timestamp',
+                'is_active',
+                'url',
+                'created_at',
+                'updated_at'
+            )->where('is_active',1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->get()->toArray();
+
+            Cache::add('contents', $contents, now()->addMinutes(30));
+        }
 
         if (empty($contents)) abort(404);
 
@@ -62,7 +72,7 @@ class HomeController extends Controller
             'content_multi_images' => $content_multi_images,
             'content_by_cat_id'    => $group_by_cat_ids,
         ];
-        // dd($data['football_standing'][0]);
+
         return view('public.home', [
             'title'    => 'Home',
             'contents' => $data ?? '',
@@ -87,7 +97,7 @@ class HomeController extends Controller
                 'url',
                 'created_at',
                 'updated_at'
-            )->where('is_active', 1)->whereDate('ondate', '=', $request->ondate)->OrderBy('timestamp', 'DESC')->paginate(10);
+            )->where('is_active', 1)->where('content', '<>', '')->whereDate('ondate', '=', $request->ondate)->OrderBy('timestamp', 'DESC')->paginate(10);
         }
         else
         {
@@ -105,7 +115,7 @@ class HomeController extends Controller
                 'url',
                 'created_at',
                 'updated_at'
-            )->where('is_active', 1)->OrderBy('timestamp', 'DESC')->paginate(10);
+            )->where('is_active', 1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->paginate(10);
         }
 
         return view('public.show_all', [
@@ -202,21 +212,29 @@ class HomeController extends Controller
     /*football*/
     public function football()
     {
-        $contents = DB::table('contents')->select(
-            'id',
-            'tag_ids',
-            'cat_ids',
-            'title',
-            'intro',
-            'image',
-            'image_thumb',
-            'content',
-            'timestamp',
-            'is_active',
-            'url',
-            'created_at',
-            'updated_at'
-        )->where('cat_ids', 6)->where('is_active',1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->get()->toArray();
+        if (Cache::has('content_football'))
+        {
+            $contents = Cache::get('content_football');
+        }
+        else
+        {
+            $contents = DB::table('contents')->select(
+                'id',
+                'tag_ids',
+                'cat_ids',
+                'title',
+                'intro',
+                'image',
+                'image_thumb',
+                'content',
+                'timestamp',
+                'is_active',
+                'url',
+                'created_at',
+                'updated_at'
+            )->where('cat_ids', 6)->where('is_active',1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->get()->toArray();
+            $contents = Cache::add('content_football', $contents, now()->addMinutes(30));
+        }
         if (empty($contents)) abort(404);
 
         $category     = Category::select('id', 'name')->get()->toArray();
@@ -279,8 +297,9 @@ class HomeController extends Controller
                 'url',
                 'created_at',
                 'updated_at'
-            )->where('cat_ids', 6)->where('is_active', 1)->OrderBy('timestamp', 'DESC')->paginate(10);
+            )->where('cat_ids', 6)->where('is_active', 1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->paginate(10);
         }
+
         return view('public.show_all', [
             'title'    => 'Semua Konten Sepak Bola',
             'contents' => $contents ?? '',
@@ -291,21 +310,30 @@ class HomeController extends Controller
     /*motogp*/
     public function motogp()
     {
-        $contents = DB::table('contents')->select(
-            'id',
-            'tag_ids',
-            'cat_ids',
-            'title',
-            'intro',
-            'image',
-            'image_thumb',
-            'content',
-            'timestamp',
-            'is_active',
-            'url',
-            'created_at',
-            'updated_at'
-        )->where('cat_ids', 2)->where('is_active',1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->get()->toArray();
+        if (Cache::has('content_motogp'))
+        {
+            $contents = Cache::get('content_motogp');
+        }
+        else
+        {
+            $contents = DB::table('contents')->select(
+                'id',
+                'tag_ids',
+                'cat_ids',
+                'title',
+                'intro',
+                'image',
+                'image_thumb',
+                'content',
+                'timestamp',
+                'is_active',
+                'url',
+                'created_at',
+                'updated_at'
+            )->where('cat_ids', 2)->where('is_active',1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->get()->toArray();
+            Cache::add('content_motogp', $contents, now()->addMinutes(30));
+        }
+
         if (empty($contents)) abort(404);
 
         $category     = Category::select('id', 'name')->get()->toArray();
@@ -349,7 +377,7 @@ class HomeController extends Controller
                 'url',
                 'created_at',
                 'updated_at'
-            )->where('cat_ids', 2)->where('is_active', 1)->whereDate('ondate', '=', $request->ondate)->OrderBy('timestamp', 'DESC')->paginate(10);
+            )->where('cat_ids', 2)->where('is_active', 1)->where('content', '<>', '')->whereDate('ondate', '=', $request->ondate)->OrderBy('timestamp', 'DESC')->paginate(10);
         }
         else
         {
@@ -367,7 +395,7 @@ class HomeController extends Controller
                 'url',
                 'created_at',
                 'updated_at'
-            )->where('cat_ids', 2)->where('is_active', 1)->OrderBy('timestamp', 'DESC')->paginate(10);
+            )->where('cat_ids', 2)->where('is_active', 1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->paginate(10);
         }
 
         return view('public.show_all', [
@@ -384,11 +412,20 @@ class HomeController extends Controller
             case 'live':
                 $ls = LS::select('league_id_origin', 'year')->whereIn('league_id_origin', [39])->where('year', date('Y'))->get()->toArray();
                 if (empty($ls)) return false;
-                foreach ($ls as $key => $value)
+                if (Cache::has('fixtures'))
                 {
-                    $uri         = sprintf('fixtures?season=%s&league=%s', $value['year'], $value['league_id_origin']);
-                    $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
-                    $output[]    = $competition['response'] ?? [];
+                    $output = Cache::get('fixtures');
+                }
+                else
+                {
+                    foreach ($ls as $key => $value)
+                    {
+                        $uri         = sprintf('fixtures?season=%s&league=%s', $value['year'], $value['league_id_origin']);
+                        $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
+                        $output[]    = $competition['response'] ?? [];
+                    }
+            
+                    Cache::add('fixtures', $output, now()->addMinutes(60));
                 }
 
                 // Define the date and time string in the Indonesian timezone
@@ -529,11 +566,20 @@ class HomeController extends Controller
             case 'live':
                 $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', [39])->where('year', date('Y'))->get();
                 if (empty($ls)) return false;
-                foreach ($ls as $key => $value)
+                if (Cache::has('standings'))
                 {
-                    $uri         = sprintf('standings?season=%s&league=%s', $value['year'], $value['league_id_origin']);
-                    $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
-                    $output[]    = $competition['response'] ?? [];
+                    $output = Cache::get('standings');
+                }
+                else
+                {
+                    foreach ($ls as $key => $value)
+                    {
+                        $uri         = sprintf('standings?season=%s&league=%s', $value['year'], $value['league_id_origin']);
+                        $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
+                        $output[]    = $competition['response'] ?? [];
+                    }
+            
+                    Cache::add('standings', $output, now()->addMinutes(60));
                 }
             break;
 
@@ -556,15 +602,23 @@ class HomeController extends Controller
             case 'live':
                 $year = LS::select('year')->where('league_id_origin', $request->id)->where('year', date('Y'))->value('year');
                 if (empty($year)) abort(404);
+                if (Cache::has('standings') && Cache::has('players'))
+                {
+                    $output        = Cache::get('standings');
+                    $output_player = Cache::get('players');
+                }
+                else
+                {
+                    $uri         = sprintf('standings?season=%s&league=%s', $year, $request->id);
+                    $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
+                    $output[]    = $competition['response'] ?? [];
+                    Cache::add('standings', $output, now()->addMinutes(60));
 
-                $uri         = sprintf('standings?season=%s&league=%s', $year, $request->id);
-                $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
-
-                $uri_player         = sprintf('players/topscorers?season=%s&league=%s', $year, $request->id);
-                $competition_player = FunctionHelper::rapidApiFootball($uri_player, 'GET');
-
-                $output[]        = $competition['response'] ?? [];
-                $output_player[] = $competition_player['response'] ?? [];
+                    $uri_player         = sprintf('players/topscorers?season=%s&league=%s', $year, $request->id);
+                    $competition_player = FunctionHelper::rapidApiFootball($uri_player, 'GET');
+                    $output_player[]    = $competition_player['response'] ?? [];
+                    Cache::add('players', $output_player, now()->addMinutes(60));
+                }
 
                 if (!empty($output))
                 {

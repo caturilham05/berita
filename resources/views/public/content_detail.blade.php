@@ -6,34 +6,37 @@
 			<div class="col-md-8">
 				@if (!empty($content->images))
 					<article class="detail">
-						<div class="detail_header">
-							<h1 class="detail_title">{{$content->title}}</h1>
-							<small class="detail_date">{{date('d F Y H:i:s', $content->timestamp)}}</small>
-						</div>
-						<div id="carouselExampleCaptions" class="carousel slide mt-2" data-bs-ride="carousel">
-						  <div class="carousel-indicators">
-						    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-						    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-						    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-						  </div>
-						  <div class="carousel-inner">
-						  	@foreach ($content->images as $key => $image)
-							    <div class="carousel-item <?php echo $key == 0 ? 'active' : ''?>">
-							      <img src="{{$image['images']}}" class="d-block w-100" alt="{{$image['text']}}">
-							      <div class="carousel-caption d-none d-md-block">
-							        {{-- <p>{{$image['text']}}</p> --}}
-							      </div>
-							    </div>
-						  	@endforeach
-						  </div>
-						  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-						    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						    <span class="visually-hidden">Previous</span>
-						  </button>
-						  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-						    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-						    <span class="visually-hidden">Next</span>
-						  </button>
+						<div class="container-fluid">
+							<div class="detail_header">
+								<h1 class="detail_title">{{$content->title}}</h1>
+								<small class="detail_date">{{date('d F Y H:i:s', $content->timestamp)}}</small>
+							</div>
+							<div id="carouselExampleCaptions" class="carousel slide mt-2" data-bs-ride="carousel">
+							  <div class="carousel-indicators">
+							    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+							    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+							    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+							  </div>
+							  <div class="carousel-inner">
+							  	@foreach ($content->images as $key => $image)
+								    <div class="carousel-item <?php echo $key == 0 ? 'active' : ''?>">
+								      <img src="{{$image['images']}}" class="d-block w-100" alt="{{$image['text']}}" style="max-height: 750px;">
+								      <div class="carousel-caption d-none d-md-block">
+								        {{-- <p>{{$image['text']}}</p> --}}
+								      </div>
+								    </div>
+							  	@endforeach
+							  </div>
+							  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+							    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							    <span class="visually-hidden">Previous</span>
+							  </button>
+							  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+							    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+							    <span class="visually-hidden">Next</span>
+							  </button>
+							</div>
+							<h5 style="margin-top: 1rem">{{$image['text']}}</h5>
 						</div>
 					</article>
 				@else

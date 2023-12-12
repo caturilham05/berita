@@ -146,7 +146,7 @@
 					</div>
 					<div class="head_custom" style="padding: 0 !important;">
 						@if (!empty($contents))
-							@foreach ($contents['scroll_x'] as $item)
+							@foreach ($contents['content_multi_images'] as $item)
 								<div class="card_custom">
 									<a href="{{route('public.content_detail', ['id' => $item->id, 'title' => $item->title])}}">
 									  <img src="{{$item->image_thumb}}" class="img_scroll_x" alt="{{$item->title}}">

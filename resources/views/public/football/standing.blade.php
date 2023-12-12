@@ -78,17 +78,16 @@
 		    <table class="fl-table" id="statistic_player_table">
 	        <thead>
 		        <tr>
-	            <th rowspan="2">Peringkat</th>
-	            <th rowspan="2">Pemain</th>
-	            <th rowspan="2">Main</th>
-	            <th rowspan="2">Gol</th>
-	            <th rowspan="2">Assist</th>
-	            <th colspan="3" rowspan="1">Kartu</th>
-		        </tr>
-		        <tr>
-		        	<th rowspan="1">Kuning</th>
-		        	<th rowspan="1">Kuning & Merah</th>
-		        	<th rowspan="1">Merah</th>
+	            <th>Peringkat</th>
+	            <th>Foto</th>
+	            <th>Pemain</th>
+	            <th>Club</th>
+	            <th>Main</th>
+	            <th>Gol</th>
+	            <th>Assist</th>
+	            <th>Kartu Kuning</th>
+	            <th>Kartu Kuning & Merah</th>
+	            <th>Kartu Merah</th>
 		        </tr>
 	        </thead>
 	        <tbody>
@@ -96,14 +95,10 @@
 	        		@foreach ($res as $key => $item)        			
 	        			@if ($key < 10)
 			        		<tr>
-			        			<td style="width: 10%"><div class="player_text">{{$key+1}}</div></td>
-			        			<td style="width: 40%">
-		        					<img src="{{$item['player']['photo']}}" width="70">
-		        					<div class="player">
-		        						<span class="player_name">{{$item['player']['name']}}</span>
-		        						<span class="player_name_team">{{$item['statistics'][0]['team']['name']}}</span>
-		        					</div>
-			        			</td>
+			        			<td><div class="player_text">{{$key+1}}</div></td>
+			        			<td><div class="player_image"><img src="{{$item['player']['photo']}}" width="70"></div></td>
+			        			<td><span class="player_name">{{$item['player']['name']}}</span></td>
+			        			<td><span class="player_name">{{$item['statistics'][0]['team']['name']}}</span></td>
 			        			<td><div class="player_text">{{$item['statistics'][0]['games']['appearences']}}</div></td>
 			        			<td><div class="player_text">{{$item['statistics'][0]['goals']['total']}}</div></td>
 			        			<td><div class="player_text">{{$item['statistics'][0]['goals']['assists']}}</div></td>
@@ -195,22 +190,18 @@
 						if (kstats < 10)
 						{
 							const trHtmlPlayer = `
-		        		<tr>
-		        			<td style="width: 10%"><div class="player_text">${kstats+1}</div></td>
-		        			<td style="width: 40%">
-	        					<img src="${stats.player.photo}" width="70">
-	        					<div class="player">
-	        						<span class="player_name">${stats.player.name}</span>
-	        						<span class="player_name_team">${stats.statistics[0].team.name}</span>
-	        					</div>
-		        			</td>
-		        			<td><div class="player_text">${stats.statistics[0].games.appearences !== null ? stats.statistics[0].games.appearences : 0}</div></td>
-		        			<td><div class="player_text">${stats.statistics[0].goals.total !== null ? stats.statistics[0].goals.total : 0}</div></td>
-		        			<td><div class="player_text">${stats.statistics[0].goals.assists !== null ? stats.statistics[0].goals.assists : 0}</div></td>
-		        			<td><div class="player_text">${stats.statistics[0].cards.yellow !== null ? stats.statistics[0].cards.yellow : 0}</div></td>
-		        			<td><div class="player_text">${stats.statistics[0].cards.yellowred !== null ? stats.statistics[0].cards.yellowred : 0}</div></td>
-		        			<td><div class="player_text">${stats.statistics[0].cards.red !== null ? stats.statistics[0].cards.red : 0}</div></td>
-		        		</tr>
+			        		<tr>
+			        			<td><div class="player_text">${kstats+1}</div></td>
+			        			<td><div class="player_image"><img src="${stats.player.photo}" width="70"></div></td>
+			        			<td><span class="player_name">${stats.player.name}</span></td>
+			        			<td><span class="player_name">${stats.statistics[0].team.name}</span></td>
+			        			<td><div class="player_text">${stats.statistics[0].games.appearences !== null ? stats.statistics[0].games.appearences : 0}</div></td>
+			        			<td><div class="player_text">${stats.statistics[0].goals.total !== null ? stats.statistics[0].goals.total : 0}</div></td>
+			        			<td><div class="player_text">${stats.statistics[0].goals.assists !== null ? stats.statistics[0].goals.assists : 0}</div></td>
+			        			<td><div class="player_text">${stats.statistics[0].cards.yellow !== null ? stats.statistics[0].cards.yellow : 0}</div></td>
+			        			<td><div class="player_text">${stats.statistics[0].cards.yellowred !== null ? stats.statistics[0].cards.yellowred : 0}</div></td>
+			        			<td><div class="player_text">${stats.statistics[0].cards.red !== null ? stats.statistics[0].cards.red : 0}</div></td>
+			        		</tr>
 							`
 							$("#statistic_player_table tbody").append(trHtmlPlayer);
 						}

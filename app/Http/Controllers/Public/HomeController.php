@@ -3,16 +3,20 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+
+use App\Helpers\FunctionHelper;
 use App\Models\Contents;
 use App\Models\Category;
 use App\Models\Tags;
 use App\Models\Leagues;
 use App\Models\LeaguesSeasons as LS;
 use App\Models\Countries;
-use Illuminate\Support\Facades\DB;
-use App\Helpers\FunctionHelper;
-use Illuminate\Support\Facades\Cache;
+use App\Models\Comments;
+
 use DateTime;
 use DateTimeZone;
 
@@ -125,14 +129,6 @@ class HomeController extends Controller
         ]);
     }
 
-    // public function show_all_search_date(Request $request){
-    //     $this->validate($request, [
-    //         'timestamp' => 'required',
-    //     ]);
-
-    //     dd($request->timestamp);
-    // }
-
     public function content_detail(Request $request)
     {
         if (empty($request->id) || empty($request->title)) abort(404);
@@ -174,12 +170,13 @@ class HomeController extends Controller
                 $contents_new[$no] = $value;
             }
         }
-
+        $comment_total = Comments::where('content_id', $request->id)->count();
         return view('public.content_detail', [
-            'title'   => 'Konten Detail',
-            'populer' => 'Berita Terpopuler',
-            'content' => $content ?? '',
-            'all'     => $contents_new ?? ''
+            'title'         => 'Konten Detail',
+            'populer'       => 'Berita Terpopuler',
+            'content'       => $content ?? '', /*didalam content ada method comment yang dibuat dari model Contents untuk menampilkan data parent comment*/
+            'all'           => $contents_new ?? '',
+            'comment_total' => $comment_total
         ]);
     }
 

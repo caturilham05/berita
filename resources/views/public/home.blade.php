@@ -404,8 +404,8 @@
 				const getDateExtract   = new Date(getDate)
 				const getDateFinal     = getDateExtract.toLocaleString("id-ID")
 				const explodeDateFinal = getDateFinal.split('/');
-				const explode2         = explodeDateFinal[2].split(',')
-				const time             = explode2[1].split('.')
+				const explode2 				 = (explodeDateFinal[2].indexOf(',') === -1) ? explodeDateFinal[2].split(' ') : explodeDateFinal[2].split(',')
+				const time 						 = explode2[1].split('.')
 				explodeDateFinal.push(explode2[0])
 				const obj = {
 					'explodeDateFinal': explodeDateFinal,

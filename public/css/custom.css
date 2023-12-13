@@ -565,6 +565,49 @@ hr {
 .detail_right_content_list:hover{
   color: var(--cream);
 }
+
+.comment{
+  /*position: relative;*/
+  /*transition: all .3s cubic-bezier(0,0,.5,1);*/
+  /*font-size: 16px;*/
+  /*padding: 1rem;*/
+  background: #ececec;
+  border-radius: 8px;
+  padding: 1rem;
+  /*box-shadow: 2px 4px 12px rgba(0,0,0,.08);*/
+  /*min-width: 230px;*/
+  /*margin-right: 1rem;*/
+  /*min-height: 250px;*/
+}
+.comment_card{
+  font-size: 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 2px 4px 12px rgba(0,0,0,.08);
+  margin: 2rem;
+  padding: 1rem;
+}
+
+.reply{
+  padding-top: 1rem;
+}
+
+.reply_icon{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 25%;
+}
+
+.reply_icon_item{
+  cursor: pointer;
+  color: var(--abu);
+}
+
+.reply_block{
+  margin-left: 5rem;
+}
+
 /*DETAIL*/
 
 .player{
@@ -574,7 +617,7 @@ hr {
 }
 
 .player_image{
-  margin: 1rem;
+  /*margin: 1rem;*/
 }
 
 .player_name{
@@ -885,4 +928,11 @@ footer{
       text-align: center;
   }
   /*table*/
+
+  .content_new_text_title{
+    color: var(--black);
+    font-size: 15px;
+    padding: 16px 32px;
+  }
+
 }

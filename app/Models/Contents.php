@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Contents extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'tag_ids',
         'cat_ids',
@@ -22,4 +23,9 @@ class Contents extends Model
         'url',
     ];
     public $timestamps = false;
+
+    public function comment()
+    {
+        return $this->morphMany(Comments::class, 'content')->whereNull('sub_comment_id');
+    }
 }

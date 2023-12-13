@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\LeaguesController;
 
 use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\CommentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('public.home');
 Route::get('/all', [HomeController::class, 'show_all'])->name('public.all');
 Route::get('/content/{id}/detail/{title}', [HomeController::class, 'content_detail'])->name('public.content_detail');
+
+Route::post('/comment/{content_id}', [CommentsController::class, 'comment'])->name('public.comment.post');
+Route::post('/comment/{content_id}/reply/{comment_id}', [CommentsController::class, 'comment_reply'])->name('public.comment.reply');
+Route::post('/comment/like/{id}', [CommentsController::class, 'comment_like'])->name('public.comment.like');
+Route::post('/comment/dislike/{id}', [CommentsController::class, 'comment_dislike'])->name('public.comment.dislike');
+
 Route::get('/search', [HomeController::class, 'search'])->name('public.search');
 
 Route::get('/football', [HomeController::class, 'football'])->name('public.football');

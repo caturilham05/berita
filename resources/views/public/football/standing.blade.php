@@ -96,7 +96,7 @@
 	        			@if ($key < 10)
 			        		<tr>
 			        			<td><div class="player_text">{{$key+1}}</div></td>
-			        			<td><div class="player_image"><img src="{{$item['player']['photo']}}" width="70"></div></td>
+			        			<td><div class="player_image"><img src="{{$item['player']['photo']}}" width="32"></div></td>
 			        			<td><span class="player_name">{{$item['player']['name']}}</span></td>
 			        			<td><span class="player_name">{{$item['statistics'][0]['team']['name']}}</span></td>
 			        			<td><div class="player_text">{{$item['statistics'][0]['games']['appearences']}}</div></td>
@@ -192,7 +192,7 @@
 							const trHtmlPlayer = `
 			        		<tr>
 			        			<td><div class="player_text">${kstats+1}</div></td>
-			        			<td><div class="player_image"><img src="${stats.player.photo}" width="70"></div></td>
+			        			<td><div class="player_image"><img src="${stats.player.photo}" width="32"></div></td>
 			        			<td><span class="player_name">${stats.player.name}</span></td>
 			        			<td><span class="player_name">${stats.statistics[0].team.name}</span></td>
 			        			<td><div class="player_text">${stats.statistics[0].games.appearences !== null ? stats.statistics[0].games.appearences : 0}</div></td>

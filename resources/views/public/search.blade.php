@@ -1,4 +1,9 @@
 @extends('public.layout.public')
+
+@section('description', $meta_description)
+@section('keywords', $meta_keywords)
+@section('author', $meta_author)
+
 @section('content')
 	<div class="container">
 			@if (empty($contents))

@@ -19,6 +19,7 @@
 	--cream: #e8bcb9;
 	--white: #e4e5e6;
   --abu: #666666;
+  --green: #4FC3A1;
 }
 
 a{
@@ -935,4 +936,24 @@ footer{
     padding: 16px 32px;
   }
 
+}
+
+.media_icon{
+  position: absolute;
+  z-index: 1;
+  padding: calc(4px / 2) 4px;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  color: #FFFFFF;
+  font-size: 12px;
+  background: #000000;
+  background: rgba(0,0,0,0.5);
+  border-radius: 6px;
+}
+
+.media_icon_top_right{
+  top: 5px;
+  right: 8px;
 }

@@ -1,5 +1,9 @@
 @extends('public.layout.public')
 
+@section('description', $meta_description)
+@section('keywords', $meta_keywords)
+@section('author', $meta_author)
+
 @section('content')
 	<div class="container">
 		<div class="row">
@@ -13,16 +17,17 @@
 							</div>
 							<div id="carouselExampleCaptions" class="carousel slide mt-2" data-bs-ride="carousel">
 							  <div class="carousel-indicators">
-							    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-							    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-							    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+							  	@foreach ($content->images as $key => $image)
+								    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{$key}}" class="<?php echo $key == 0 ? 'active' : ''?>" aria-current="true" aria-label="Slide {{$key}}"></button>
+							  	@endforeach
+							    {{-- <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button> --}}
+							    {{-- <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button> --}}
 							  </div>
 							  <div class="carousel-inner">
 							  	@foreach ($content->images as $key => $image)
 								    <div class="carousel-item <?php echo $key == 0 ? 'active' : ''?>">
 								      <img src="{{$image['images']}}" class="d-block w-100" alt="{{$image['text']}}" style="max-height: 750px;">
 								      <div class="carousel-caption d-none d-md-block">
-								        {{-- <p>{{$image['text']}}</p> --}}
 								      </div>
 								    </div>
 							  	@endforeach
@@ -59,7 +64,7 @@
 					@foreach ($all as $key => $value)
 						<div class="detail_right_content">
 							<div class="detail_right_content_number">#{{$key}}</div>
-							<a href="" class="detail_right_content_list">{{$value->title}}</a>
+							<a href="{{route('public.content_detail', ['id' => $value->id, 'title' => $value->title])}}" class="detail_right_content_list">{{$value->title}}</a>
 						</div>
 					@endforeach
 					<a href="{{route('public.all')}}" class="btn_custom btn-lg" style="margin-top: 1rem;">Lihat Semua Berita</a>
@@ -107,12 +112,10 @@
 				</div>
 			</div>
 			<div class="col-md-4">
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				<div class="new_feeds_header">
+					<h2 class="new_feeds_header_title">Foto</h2>
+				</div>
+	      @include('public.partials.photo', ['content_multi_images' => $images])
 			</div>
 		</div>
 	</div>

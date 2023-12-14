@@ -52,34 +52,54 @@ class HomeController extends Controller
         }
 
         if (empty($contents)) abort(404);
-
+        $most_comments        = Comments::get()->groupBy('content_id')->skip(0)->take(5)->map->count()->toArray();
         $football_schedule    = $this->football_schedule();
         $football_standing    = $this->football_standing();
         $new_content          = $contents[0];
         $new_feeds            = array_slice($contents, 1, 2, true);
         $content_multi_images = [];
         $group_by_cat_ids     = [];
+        $most_comments_items  = [];
         shuffle($contents);
         foreach ($contents as $value)
         {
-            if (!empty($value->images)) $content_multi_images[] = $value;
+            if (isset($most_comments[$value->id]))
+            {
+                $most_comments_items[] = [
+                    'title' => $value->title,
+                    'total' => $most_comments[$value->id]
+                ];
+            }
+            if (!empty($value->images))
+            {
+                $value->images          = json_decode($value->images, 1);
+                $content_multi_images[] = $value;
+            }
             $group_by_cat_ids[$value->cat_ids] = $value;
         }
+
+        usort($most_comments_items, function($a, $b){
+          return $b['total'] - $a['total'];
+        });
 
         $data = [
             'new'                  => $new_content,
             'new_feeds'            => $new_feeds,
             'scroll_x'             => array_slice($contents, 30, 10, true),
             'recomendation'        => array_slice($contents, 15, 8, true),
-            'football_schedule'    => $football_schedule ?? [],
-            'football_standing'    => $football_standing ?? [],
+            'football_schedule'    => $football_schedule ?? '',
+            'football_standing'    => $football_standing ?? '',
             'content_multi_images' => $content_multi_images,
             'content_by_cat_id'    => $group_by_cat_ids,
+            'most_comments'        => $most_comments_items
         ];
 
         return view('public.home', [
-            'title'    => 'Home',
-            'contents' => $data ?? '',
+            'title'            => 'Home',
+            'contents'         => $data ?? '',
+            'meta_description' => 'Informasi dan berita olahraga terbaru tentang sepakbola, moto gp, basket, tenis, bulutangkis, formula 1, fakta, gosip dan foto video.',
+            'meta_keywords'    => 'informasi olahraga, berita olahraga, berita olahraga terbaru, berita olahraga terlengkap, klasemen sepakbola, jadwal pertandingan, hasil pertandingan, fakta olahraga, gosip olahraga, sepakbola, tenis, bulutangkis, formula 1, moto gp, basket',
+            'meta_author'      => 'kbsnews'
         ]);
     }
 
@@ -123,9 +143,12 @@ class HomeController extends Controller
         }
 
         return view('public.show_all', [
-            'title'    => 'Semua Konten Berita',
-            'contents' => $contents ?? '',
-            'ondate'   => $request->ondate
+            'title'            => 'Semua Konten Berita',
+            'contents'         => $contents ?? '',
+            'ondate'           => $request->ondate,
+            'meta_description' => 'Informasi dan berita olahraga terbaru tentang sepakbola, moto gp, basket, tenis, bulutangkis, formula 1, fakta, gosip dan foto video.',
+            'meta_keywords'    => 'informasi olahraga, berita olahraga, berita olahraga terbaru, berita olahraga terlengkap, klasemen sepakbola, jadwal pertandingan, hasil pertandingan, fakta olahraga, gosip olahraga, sepakbola, tenis, bulutangkis, formula 1, moto gp, basket',
+            'meta_author'      => 'kbsnews'
         ]);
     }
 
@@ -155,10 +178,9 @@ class HomeController extends Controller
         if (!empty($content->images))
         {
             $content->images  = json_decode($content->images, true);
-            $content->images  = array_slice($content->images, 0, 3);
         }
 
-        $contents = DB::table('contents')->select('title')->where('is_active',1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->skip(20)->take(7)->get()->toArray();
+        $contents = DB::table('contents')->select('id','title')->where('is_active',1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->skip(20)->take(7)->get()->toArray();
 
         $contents_new = [];
         if (!empty($contents))
@@ -170,13 +192,21 @@ class HomeController extends Controller
                 $contents_new[$no] = $value;
             }
         }
+        $meta_keywords = implode(',', explode(' ', $content->title));
         $comment_total = Comments::where('content_id', $request->id)->count();
+        $contentsClass = new Contents();
+        $images        = $contentsClass->getImages();
+
         return view('public.content_detail', [
-            'title'         => 'Konten Detail',
-            'populer'       => 'Berita Terpopuler',
-            'content'       => $content ?? '', /*didalam content ada method comment yang dibuat dari model Contents untuk menampilkan data parent comment*/
-            'all'           => $contents_new ?? '',
-            'comment_total' => $comment_total
+            'title'            => 'Konten Detail',
+            'populer'          => 'Berita Terpopuler',
+            'content'          => $content ?? '', /*didalam content ada method comment yang dibuat dari model Contents untuk menampilkan data parent comment*/
+            'all'              => $contents_new ?? '',
+            'comment_total'    => $comment_total,
+            'meta_description' => $content->title,
+            'meta_keywords'    => $meta_keywords,
+            'meta_author'      => 'kbsnews',
+            'images'           => $images,
         ]);
     }
 
@@ -200,12 +230,16 @@ class HomeController extends Controller
             'updated_at'
         )->where('title', 'like', "%".addslashes($request->keyword)."%")->where('is_active', 1)->OrderBy('timestamp', 'DESC')->paginate(10);
         return view('public.search', [
-            'title'          => 'Hasil Pencarian',
-            'keyword'        => $request->keyword,
-            'contents'       => !empty($contents->total()) ? $contents : null,
-            'contents_total' => $contents->total()
+            'title'            => 'Hasil Pencarian',
+            'keyword'          => $request->keyword,
+            'contents'         => !empty($contents->total()) ? $contents : null,
+            'contents_total'   => $contents->total(),
+            'meta_description' => 'Informasi dan berita olahraga terbaru tentang sepakbola, moto gp, basket, tenis, bulutangkis, formula 1, fakta, gosip dan foto video.',
+            'meta_keywords'    => $request->keyword,
+            'meta_author'      => 'kbsnews'
         ]);
     }
+
     /*football*/
     public function football()
     {
@@ -253,8 +287,11 @@ class HomeController extends Controller
         ];
 
         return view('public.football.football', [
-            'title'    => 'Football',
-            'contents' => $data
+            'title'            => 'Football',
+            'contents'         => $data,
+            'meta_description' => 'Informasi dan berita olahraga terbaru tentang sepakbola, moto gp, basket, tenis, bulutangkis, formula 1, fakta, gosip dan foto video.',
+            'meta_keywords'    => 'informasi olahraga, berita olahraga, berita olahraga terbaru, berita olahraga terlengkap, klasemen sepakbola, jadwal pertandingan, hasil pertandingan, fakta olahraga, gosip olahraga, sepakbola, tenis, bulutangkis, formula 1, moto gp, basket',
+            'meta_author'      => 'kbsnews'
         ]);        
     }
 
@@ -298,8 +335,11 @@ class HomeController extends Controller
         }
 
         return view('public.show_all', [
-            'title'    => 'Semua Konten Sepak Bola',
-            'contents' => $contents ?? '',
+            'title'            => 'Semua Konten Sepak Bola',
+            'contents'         => $contents ?? '',
+            'meta_description' => 'Informasi dan berita olahraga terbaru tentang sepakbola, moto gp, basket, tenis, bulutangkis, formula 1, fakta, gosip dan foto video.',
+            'meta_keywords'    => 'informasi olahraga, berita olahraga, berita olahraga terbaru, berita olahraga terlengkap, klasemen sepakbola, jadwal pertandingan, hasil pertandingan, fakta olahraga, gosip olahraga, sepakbola, tenis, bulutangkis, formula 1, moto gp, basket',
+            'meta_author'      => 'kbsnews'
         ]);
     }
     /*football*/
@@ -352,8 +392,11 @@ class HomeController extends Controller
         ];
 
         return view('public.motogp.motogp', [
-            'title'    => 'Moto-GP',
-            'contents' => $data
+            'title'            => 'Moto-GP',
+            'contents'         => $data,
+            'meta_description' => 'Informasi dan berita olahraga terbaru tentang sepakbola, moto gp, basket, tenis, bulutangkis, formula 1, fakta, gosip dan foto video.',
+            'meta_keywords'    => 'informasi olahraga, berita olahraga, berita olahraga terbaru, berita olahraga terlengkap, klasemen sepakbola, jadwal pertandingan, hasil pertandingan, fakta olahraga, gosip olahraga, sepakbola, tenis, bulutangkis, formula 1, moto gp, basket',
+            'meta_author'      => 'kbsnews'
         ]);        
     }
     public function motogp_show_all(Request $request)
@@ -396,8 +439,11 @@ class HomeController extends Controller
         }
 
         return view('public.show_all', [
-            'title'    => 'Semua Konten Moto-GP',
-            'contents' => $contents ?? '',
+            'title'            => 'Semua Konten Moto-GP',
+            'contents'         => $contents ?? '',
+            'meta_description' => 'Informasi dan berita olahraga terbaru tentang sepakbola, moto gp, basket, tenis, bulutangkis, formula 1, fakta, gosip dan foto video.',
+            'meta_keywords'    => 'informasi olahraga, berita olahraga, berita olahraga terbaru, berita olahraga terlengkap, klasemen sepakbola, jadwal pertandingan, hasil pertandingan, fakta olahraga, gosip olahraga, sepakbola, tenis, bulutangkis, formula 1, moto gp, basket',
+            'meta_author'      => 'kbsnews'
         ]);
     }
     /*motogp*/
@@ -675,10 +721,13 @@ class HomeController extends Controller
         }
 
         return view('public.football.standing', [
-            'title'         => 'Klasemen',
-            'league'        => $request->title,
-            'result'        => $output ?? [],
-            'result_player' => $output_player ?? [],
+            'title'            => 'Klasemen',
+            'league'           => $request->title,
+            'result'           => $output ?? '',
+            'result_player'    => $output_player ?? '',
+            'meta_description' => sprintf('Klasemen %s', $request->title),
+            'meta_keywords'    => 'klasemen sepakbola, ranking sepakbola, peringkat sepakbola, peringkat pemain, statistik pemain, jadwal sepakbola',
+            'meta_author'      => 'kbsnews'
         ]);
     }
 

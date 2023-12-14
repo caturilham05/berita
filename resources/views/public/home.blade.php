@@ -1,5 +1,9 @@
 @extends('public.layout.public')
 
+@section('description', $meta_description)
+@section('keywords', $meta_keywords)
+@section('author', $meta_author)
+
 @section('content')
 	<div class="container">
 		<div class="head_custom">
@@ -132,6 +136,23 @@
 							</tbody>
 						</table>
 						<div id="loading_schedule_mini"></div>
+						<hr>
+						@if (empty($contents['most_comments']))
+							<h5>Saat ini tidak ada komentar terbanyak</h5>
+						@else
+							<div class="new_feeds_header">
+								<h2 class="new_feeds_header_title">Komentar Terbanyak</h2>
+							</div>
+							@foreach ($contents['most_comments'] as $value)
+								<div style="display: flex; padding-bottom: 1rem;">
+									<div style="display: flex; flex-direction: column; align-items: center; margin-right: 1rem;">
+										<h5 style="color: var(--green);">{{$value['total']}}</h5>
+										<div style="font-size: 9px; letter-spacing: 0.5px;">Komentar</div>
+									</div>
+									<div style="font-size: 13px; font-weight: 500;">{{$value['title']}}</div>
+								</div>
+							@endforeach
+						@endif
 					</div>
 				</div>
 			</div>
@@ -144,23 +165,7 @@
 					<div class="new_feeds_header">
 						<h2 class="new_feeds_header_title">Foto</h2>
 					</div>
-					<div class="head_custom" style="padding: 0 !important;">
-						@if (!empty($contents))
-							@foreach ($contents['content_multi_images'] as $item)
-								<div class="card_custom">
-									<a href="{{route('public.content_detail', ['id' => $item->id, 'title' => $item->title])}}">
-									  <img src="{{$item->image_thumb}}" class="img_scroll_x" alt="{{$item->title}}">
-									</a>
-								  <div class="card-body card_body_custom">
-								  	<a href="{{route('public.content_detail', ['id' => $item->id, 'title' => $item->title])}}">
-									    <h5 class="card-text card_text_scroll_x">{{$item->title}}</h5>
-								  	</a>
-								    <small>{{date('d F Y H:i:s', $item->timestamp)}}</small>
-								  </div>
-								</div>
-							@endforeach
-						@endif
-					</div>
+		      @include('public.partials.photo', ['content_multi_images' => $contents['content_multi_images']])
 				</div>
 			</div>
 		</div>

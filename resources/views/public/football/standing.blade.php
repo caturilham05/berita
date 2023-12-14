@@ -1,7 +1,10 @@
 @extends('public.layout.public')
 
-@section('content')
+@section('description', $meta_description)
+@section('keywords', $meta_keywords)
+@section('author', $meta_author)
 
+@section('content')
 	<div class="container-fluid">
 		<div style="display: flex; justify-content: center; margin: 1rem; text-transform: uppercase;">
 			<h2 id="title">{{$title.' '.$league}}</h2>

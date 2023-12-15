@@ -84,8 +84,8 @@ Route::get('/statistic/player/{id}', [HomeController::class, 'football_statistic
 if (env('APP_ENV') == 'local')
 {
 	Route::get('/test', function(){
-		if (Cache::has('contents')) {
-			return Cache::get('contents');
+		if (Cache::has('content_football')) {
+			return Cache::pull('content_football');
 		}
 
 		return 'testing';

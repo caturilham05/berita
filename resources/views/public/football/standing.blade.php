@@ -13,7 +13,7 @@
 			<span>M = Menang, S = Seri, K = Kalah, D = Dimainkan, SG = Selisih Gol, Pts = Points</span>
 			<form action="" method="get">
 			  <div class="input-group mb-3">
-			    <select class="form-control js-example-basic-single" id="standing" name="code_countries">
+			    <select class="form-control js-example-basic-single" id="standing" name="code_countries" aria-labelledby="standing_all">
 		        <option value="39">Liga Inggris</option>
 		        <option value="140">Liga Spanyol</option>
 		        <option value="61">Liga Prancis</option>
@@ -45,7 +45,7 @@
 					        <tr>
 				            <td>{{$standing['rank']}}</td>
 				            <td>
-				            	<img src="{{$standing['team']['logo']}}" width="30">
+				            	<img src="{{$standing['team']['logo']}}" alt="{{$standing['team']['name']}}" width="30">
 											{{$standing['team']['name']}}
 				            </td>
 				            <td>{{$standing['all']['win']}}</td>
@@ -99,7 +99,7 @@
 	        			@if ($key < 10)
 			        		<tr>
 			        			<td><div class="player_text">{{$key+1}}</div></td>
-			        			<td><div class="player_image"><img src="{{$item['player']['photo']}}" width="32"></div></td>
+			        			<td><div class="player_image"><img src="{{$item['player']['photo']}}" alt="{{$item['player']['name']}}" width="32"></div></td>
 			        			<td><span class="player_name">{{$item['player']['name']}}</span></td>
 			        			<td><span class="player_name">{{$item['statistics'][0]['team']['name']}}</span></td>
 			        			<td><div class="player_text">{{$item['statistics'][0]['games']['appearences']}}</div></td>

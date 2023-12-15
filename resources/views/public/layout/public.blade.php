@@ -39,7 +39,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     -->
     <script src="{{ asset('fontawesome/js/all.min.js') }}"></script>
-    <script src="https://kit.fontawesome.com/f1f2c9a1e1.js" crossorigin="anonymous"></script>
-    @yield('script')
+    <script src="/js/app.js"></script>
+    {{-- <script src="{{ asset('js/custom.js') }}"></script> --}}
+    {{-- @yield('script') --}}
   </body>
 </html>

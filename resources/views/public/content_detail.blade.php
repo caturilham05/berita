@@ -51,7 +51,7 @@
 							<small class="detail_date">{{date('d F Y H:i:s', $content->timestamp)}}</small>
 						</div>
 						<div class="detail_content">
-							<img src="{{$content->image}}" style="width: 100%" class="detail_content_img">
+							<img src="{{$content->image}}" alt="{{$content->title}}" style="width: 100%" class="detail_content_img">
 							<div class="detail_content_text">{!! $content->content !!}</div>
 						</div>
 					</article>

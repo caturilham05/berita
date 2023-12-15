@@ -58,8 +58,8 @@ class HomeController extends Controller
         $new_content          = $contents[0];
         $new_feeds            = array_slice($contents, 1, 2, true);
         $content_multi_images = [];
-        $group_by_cat_ids     = [];
         $most_comments_items  = [];
+        $group_by_cat_ids     = [];
         shuffle($contents);
         foreach ($contents as $value)
         {
@@ -243,11 +243,7 @@ class HomeController extends Controller
     /*football*/
     public function football()
     {
-        if (Cache::has('content_football'))
-        {
-            $contents = Cache::get('content_football');
-        }
-        else
+        if (!Cache::has('content_football'))
         {
             $contents = DB::table('contents')->select(
                 'id',
@@ -257,6 +253,7 @@ class HomeController extends Controller
                 'intro',
                 'image',
                 'image_thumb',
+                'images',
                 'content',
                 'timestamp',
                 'is_active',
@@ -264,26 +261,54 @@ class HomeController extends Controller
                 'created_at',
                 'updated_at'
             )->where('cat_ids', 6)->where('is_active',1)->where('content', '<>', '')->OrderBy('timestamp', 'DESC')->get()->toArray();
-            $contents = Cache::add('content_football', $contents, now()->addMinutes(30));
+            Cache::add('content_football', $contents, now()->addMinutes(30));
         }
-        if (empty($contents)) abort(404);
+        else
+        {
+            $contents = Cache::get('content_football');
+        }
 
-        $category     = Category::select('id', 'name')->get()->toArray();
-        $category_new = [];
+        if (!isset($contents[0])) abort(404);
+
+        $most_comments        = Comments::get()->groupBy('content_id')->skip(0)->take(5)->map->count()->toArray();
+        $football_schedule    = $this->football_schedule();
+        $football_standing    = $this->football_standing();
+        $category             = Category::select('id', 'name')->get()->toArray();
+        $category_new         = [];
+        $content_multi_images = [];
+        $most_comments_items  = [];
+
         foreach ($category as $value) $category_new[$value['id']] = $value['name'];
-
         foreach ($contents as $key => $value)
         {
+            if (isset($most_comments[$value->id]))
+            {
+                $most_comments_items[] = [
+                    'title' => $value->title,
+                    'total' => $most_comments[$value->id]
+                ];
+            }
+
+            if (!empty($value->images))
+            {
+                $value->images          = json_decode($value->images, 1);
+                $content_multi_images[] = $value;
+            }
+
             $value->cat_name = $category_new[$value->cat_ids];
-            $contents[$key]    = $value;
+            $contents[$key]  = $value;
         }
 
         $data = [
-            'new'           => $contents[0],
-            'new_feeds'     => array_slice($contents, 1, 2, true),
-            'scroll_x'      => array_slice($contents, -10, 10, true),
-            'recomendation' => array_slice($contents, -25, 8, true),
-            'cat_id'        => $contents[0]->cat_ids,
+            'new'                  => $contents[0],
+            'new_feeds'            => array_slice($contents, 1, 2, true),
+            'scroll_x'             => array_slice($contents, -10, 10, true),
+            'recomendation'        => array_slice($contents, -25, 8, true),
+            'cat_id'               => $contents[0]->cat_ids,
+            'football_schedule'    => $football_schedule ?? '',
+            'football_standing'    => $football_standing ?? '',
+            'content_multi_images' => $content_multi_images,
+            'most_comments'        => $most_comments_items
         ];
 
         return view('public.football.football', [

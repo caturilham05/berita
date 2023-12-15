@@ -66,6 +66,7 @@ class HomeController extends Controller
             if (isset($most_comments[$value->id]))
             {
                 $most_comments_items[] = [
+                    'id'    => $value->id,
                     'title' => $value->title,
                     'total' => $most_comments[$value->id]
                 ];
@@ -284,6 +285,7 @@ class HomeController extends Controller
             if (isset($most_comments[$value->id]))
             {
                 $most_comments_items[] = [
+                    'id'    => $value->id,
                     'title' => $value->title,
                     'total' => $most_comments[$value->id]
                 ];
@@ -398,22 +400,47 @@ class HomeController extends Controller
 
         if (empty($contents)) abort(404);
 
-        $category     = Category::select('id', 'name')->get()->toArray();
-        $category_new = [];
+        $most_comments        = Comments::get()->groupBy('content_id')->skip(0)->take(5)->map->count()->toArray();
+        $football_schedule    = $this->football_schedule();
+        $football_standing    = $this->football_standing();
+        $category             = Category::select('id', 'name')->get()->toArray();
+        $category_new         = [];
+        $content_multi_images = [];
+        $most_comments_items  = [];
+
         foreach ($category as $value) $category_new[$value['id']] = $value['name'];
 
         foreach ($contents as $key => $value)
         {
+            if (isset($most_comments[$value->id]))
+            {
+                $most_comments_items[] = [
+                    'id'    => $value->id,
+                    'title' => $value->title,
+                    'total' => $most_comments[$value->id]
+                ];
+            }
+
+            if (!empty($value->images))
+            {
+                $value->images          = json_decode($value->images, 1);
+                $content_multi_images[] = $value;
+            }
+
             $value->cat_name = $category_new[$value->cat_ids];
             $contents[$key]    = $value;
         }
 
         $data = [
-            'new'           => $contents[0],
-            'new_feeds'     => array_slice($contents, 1, 2, true),
-            'scroll_x'      => array_slice($contents, -10, 10, true),
-            'recomendation' => array_slice($contents, -25, 8, true),
-            'cat_id'        => $contents[0]->cat_ids,
+            'new'                  => $contents[0],
+            'new_feeds'            => array_slice($contents, 1, 2, true),
+            'scroll_x'             => array_slice($contents, -10, 10, true),
+            'recomendation'        => array_slice($contents, -25, 8, true),
+            'cat_id'               => $contents[0]->cat_ids,
+            'football_schedule'    => $football_schedule ?? '',
+            'football_standing'    => $football_standing ?? '',
+            'content_multi_images' => $content_multi_images,
+            'most_comments'        => $most_comments_items
         ];
 
         return view('public.motogp.motogp', [

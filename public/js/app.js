@@ -120,6 +120,22 @@ $(document).ready(function () {
       return _ref.apply(this, arguments);
     };
   }());
+  $('.balas').each(function (i, e) {
+    $("#".concat(e.id)).on('click', function (event) {
+      switch (event.target.innerText) {
+        case 'Balas':
+          $("#form_".concat(e.id))[0].hidden = false;
+          event.target.innerText = 'Tutup';
+          break;
+        case 'Tutup':
+          $("#form_".concat(e.id))[0].hidden = true;
+          event.target.innerText = 'Balas';
+          break;
+        default:
+          break;
+      }
+    });
+  });
   function extractDate(scheduleDate) {
     var getDate = scheduleDate;
     var options = {

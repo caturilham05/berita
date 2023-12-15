@@ -120,29 +120,3 @@
 		</div>
 	</div>
 @endsection
-@section('script')
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('.balas').each(function(i, e){
-				$(`#${e.id}`).on('click', (event) => {
-					switch(event.target.innerText)
-					{
-						case 'Balas':
-							$(`#form_${e.id}`)[0].hidden = false
-							event.target.innerText = 'Tutup'
-						break;
-
-						case 'Tutup':
-							$(`#form_${e.id}`)[0].hidden = true
-							event.target.innerText = 'Balas'
-						break;
-
-						default:
-						break;
-					}
-				})
-			})
-		})
-
-	</script>
-@endsection

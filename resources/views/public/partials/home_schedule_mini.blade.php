@@ -55,13 +55,15 @@
 		<div class="new_feeds_header">
 			<h2 class="new_feeds_header_title">Komentar Terbanyak</h2>
 		</div>
-		@foreach ($contents['most_comments'] as $value)
+		@foreach ($contents['most_comments'] as  $value)
 			<div style="display: flex; padding-bottom: 1rem;">
 				<div style="display: flex; flex-direction: column; align-items: center; margin-right: 1rem;">
 					<h5 style="color: var(--green);">{{$value['total']}}</h5>
 					<div style="font-size: 9px; letter-spacing: 0.5px;">Komentar</div>
 				</div>
-				<div style="font-size: 13px; font-weight: 500;">{{$value['title']}}</div>
+				<div  style="font-size: 13px; font-weight: 500;">
+					<a class="card_text_recomendation" href="{{route('public.content_detail', ['id' => $value['id'], 'title' => $value['title']])}}">{{$value['title']}}</a>
+				</div>
 			</div>
 		@endforeach
 	@endif

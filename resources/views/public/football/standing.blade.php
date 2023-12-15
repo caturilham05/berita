@@ -124,7 +124,7 @@
 	</div>
 @endsection
 
-@section('script')
+{{-- @section('script')
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#standing').on('change', async function(event){
@@ -216,4 +216,4 @@
 		})
 	})
 </script>
-@endsection
+@endsection --}}

@@ -40,6 +40,7 @@
     -->
     <script src="{{ asset('fontawesome/js/all.min.js') }}"></script>
     <script src="/js/app.js"></script>
+    <script src="/js/standing.js"></script>
     {{-- <script src="{{ asset('js/custom.js') }}"></script> --}}
     {{-- @yield('script') --}}
   </body>

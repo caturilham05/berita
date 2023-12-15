@@ -60,7 +60,7 @@
 	</div>
 @endsection
 
-@section('script')
+{{-- @section('script')
 	<script>
 	  // $(document).ready(function(){
 			// $('#schedule_mini').on('change',(event) => {
@@ -222,4 +222,4 @@
 			// }
 	  // });
 	</script>
-@endsection
+@endsection --}}

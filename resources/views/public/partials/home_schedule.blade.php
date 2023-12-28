@@ -27,7 +27,7 @@
 						<div class="schedule_date_name">{{$item['teams']['home']['name']}} VS {{$item['teams']['away']['name']}}</div>
 						<div class="schedule_date_event">{{$item['league']['name']}}</div>
 						<div class="schedule_btn_block">
-							<a href="" class="schedule_btn">SELENGKAPNYA</a>
+							<a href="{{route('public.schedule', ['league_id_origin' => $item['league']['id'], 'league' => $item['league']['name']])}}" class="schedule_btn">SELENGKAPNYA</a>
 						</div>
 					</div>
 				@endif

@@ -46,10 +46,10 @@ class ContentDetailTask extends Command
             {
                 if (preg_match_all('/https\:\/\/akcdn\.detik\.net\.id\/[^"]+/', $images_all[0], $image_src)) $image_src_get = $image_src[0];
                 if (preg_match_all('/alt=\"([^"]+)\"/', $images_all[0], $image_src_text)) $image_src_text_get = $image_src_text[1];
-                foreach ($image_src_get as $key => $value)
+                foreach ($image_src_get as $key => $image)
                 {
                     $images_all_data[] = [
-                        'images' => $value,
+                        'images' => $image,
                         'text'   => $image_src_text_get[$key]
                     ];
                 }
@@ -72,7 +72,7 @@ class ContentDetailTask extends Command
 
             }
             $datas[] = [
-                'id'        => $value['id'],
+                'id'        => $value['id'] ?? NULL,
                 'image'     => $image_content ?? NULL,
                 'images'    => $images_all_data_encode ?? NULL,
                 'content'   => $text_all ?? NULL,

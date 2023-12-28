@@ -55,11 +55,11 @@
 				            <td>{{$standing['goalsDiff']}}</td>
 				            <td>{{$standing['points']}}</td>
 				            <td style="display: flex; align-items: center; justify-content: space-between;">
-				            	<div style="color: {{$standing['form'][0]['color']}}; font-size: 13px; font-weight: bold;" >{{$standing['form'][0]['text']}}</div>
-				            	<div style="color: {{$standing['form'][1]['color']}}; font-size: 13px; font-weight: bold;" >{{$standing['form'][1]['text']}}</div>
-				            	<div style="color: {{$standing['form'][2]['color']}}; font-size: 13px; font-weight: bold;" >{{$standing['form'][2]['text']}}</div>
-				            	<div style="color: {{$standing['form'][3]['color']}}; font-size: 13px; font-weight: bold;" >{{$standing['form'][3]['text']}}</div>
-				            	<div style="color: {{$standing['form'][4]['color']}}; font-size: 13px; font-weight: bold;" >{{$standing['form'][4]['text']}}</div>
+				            	<div style="color: {{$standing['form'][0]['color'] ?? ''}}; font-size: 13px; font-weight: bold;" >{{$standing['form'][0]['text'] ?? ''}}</div>
+				            	<div style="color: {{$standing['form'][1]['color'] ?? ''}}; font-size: 13px; font-weight: bold;" >{{$standing['form'][1]['text'] ?? ''}}</div>
+				            	<div style="color: {{$standing['form'][2]['color'] ?? ''}}; font-size: 13px; font-weight: bold;" >{{$standing['form'][2]['text'] ?? ''}}</div>
+				            	<div style="color: {{$standing['form'][3]['color'] ?? ''}}; font-size: 13px; font-weight: bold;" >{{$standing['form'][3]['text'] ?? ''}}</div>
+				            	<div style="color: {{$standing['form'][4]['color'] ?? ''}}; font-size: 13px; font-weight: bold;" >{{$standing['form'][4]['text'] ?? ''}}</div>
 				            </td>
 					        </tr>
 		        		@endforeach

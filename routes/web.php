@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\LeaguesController;
 
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\CommentsController;
+use App\Http\Controllers\Public\ScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,16 +80,17 @@ Route::get('/football/schedule/change/ajax/{id_origin}', [HomeController::class,
 Route::get('/football/standing/change/ajax/{id_origin}', [HomeController::class, 'football_standing_change'])->name('public.football_standing_change');
 Route::get('/standing/{id}/detail/{title}', [HomeController::class, 'football_standing_view'])->name('public.standing');
 Route::get('/statistic/player/{id}', [HomeController::class, 'football_statistic_player_change'])->name('public.statistic.player');
+
+Route::get('/schedule/{league_id_origin}/{league}', [ScheduleController::class, 'index'])->name('public.schedule');
 /*Public*/
 
 if (env('APP_ENV') == 'local')
 {
 	Route::get('/test', function(){
-		if (Cache::has('content_football')) {
-			return Cache::pull('content_football');
+		if (Cache::has('players')) {
+			return Cache::pull('players');
 		}
 
 		return 'testing';
 	})->name('public.test');
 }
-

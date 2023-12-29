@@ -42,6 +42,6 @@
     <script src="/js/app.js"></script>
     <script src="/js/standing.js"></script>
     {{-- <script src="{{ asset('js/custom.js') }}"></script> --}}
-    {{-- @yield('script') --}}
+    @yield('script')
   </body>
 </html>

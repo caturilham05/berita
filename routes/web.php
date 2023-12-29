@@ -82,6 +82,8 @@ Route::get('/standing/{id}/detail/{title}', [HomeController::class, 'football_st
 Route::get('/statistic/player/{id}', [HomeController::class, 'football_statistic_player_change'])->name('public.statistic.player');
 
 Route::get('/schedule/{league_id_origin}/{league}', [ScheduleController::class, 'index'])->name('public.schedule');
+
+Route::get('/scrap/{date}/{page}', [ScrapController::class, 'scrap_sync'])->name('public.scrap.sync');	
 /*Public*/
 
 if (env('APP_ENV') == 'local')

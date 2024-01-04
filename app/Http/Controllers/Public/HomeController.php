@@ -505,7 +505,7 @@ class HomeController extends Controller
         switch (env('APP_ENV'))
         {
             case 'live':
-                $ls = LS::select('league_id_origin', 'year')->whereIn('league_id_origin', [39])->where('year', date('Y'))->get()->toArray();
+                $ls = LS::select('league_id_origin', 'year')->whereIn('league_id_origin', [39])->where('year', FunctionHelper::year_def())->get()->toArray();
                 if (empty($ls)) return false;
                 if (Cache::has('fixtures'))
                 {
@@ -579,7 +579,7 @@ class HomeController extends Controller
         switch (env('APP_ENV'))
         {
             case 'live':
-                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', $request->id_origin)->where('year', date('Y'))->first();
+                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', $request->id_origin)->where('year', FunctionHelper::year_def())->first();
 
                 if (empty($ls))
                 {
@@ -659,7 +659,7 @@ class HomeController extends Controller
         switch (env('APP_ENV'))
         {
             case 'live':
-                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', [39])->where('year', date('Y'))->get();
+                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', [39])->where('year', FunctionHelper::year_def())->get();
                 if (empty($ls)) return false;
                 if (Cache::has('standings'))
                 {
@@ -695,7 +695,7 @@ class HomeController extends Controller
         switch (env('APP_ENV'))
         {
             case 'live':
-                $year = LS::select('year')->where('league_id_origin', $request->id)->where('year', date('Y'))->value('year');
+                $year = LS::select('year')->where('league_id_origin', $request->id)->where('year', FunctionHelper::year_def())->value('year');
                 if (empty($year)) abort(404);
                 if (Cache::has('standings') && Cache::has('players'))
                 {
@@ -788,7 +788,7 @@ class HomeController extends Controller
         switch (env('APP_ENV'))
         {
             case 'live':
-                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', $request->id_origin)->where('year', date('Y'))->first();
+                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', $request->id_origin)->where('year', FunctionHelper::year_def())->first();
 
                 if (empty($ls))
                 {
@@ -876,7 +876,7 @@ class HomeController extends Controller
         switch (env('APP_ENV'))
         {
             case 'live':
-                $year = LS::select('year')->where('league_id_origin', $request->id)->where('year', date('Y'))->value('year');
+                $year = LS::select('year')->where('league_id_origin', $request->id)->where('year', FunctionHelper::year_def())->value('year');
                 if (empty($year)) abort(404);
                 $uri         = sprintf('players/topscorers?season=%s&league=%s', $year, $request->id);
                 $competition = FunctionHelper::rapidApiFootball($uri, 'GET');

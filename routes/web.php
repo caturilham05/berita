@@ -89,8 +89,8 @@ Route::get('/scrap/{date}/{page}', [ScrapController::class, 'scrap_sync'])->name
 if (env('APP_ENV') == 'local')
 {
 	Route::get('/test', function(){
-		if (Cache::has('players')) {
-			return Cache::pull('players');
+		if (Cache::has('standings')) {
+			return Cache::pull('standings');
 		}
 
 		return 'testing';

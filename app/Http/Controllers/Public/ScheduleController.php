@@ -21,7 +21,7 @@ class ScheduleController extends Controller
         switch (env('APP_ENV'))
         {
             case 'live':
-                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', $request->league_id_origin)->where('year', date('Y'))->get()->toArray();
+                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', $request->league_id_origin)->where('year', FunctionHelper::year_def())->get()->toArray();
                 if (empty($ls)) return abort(404);
                 if (Cache::has('fixtures'))
                 {

@@ -960,4 +960,11 @@ class FunctionHelper {
         ];
         return $output;
     }
+
+    public static function year_def()
+    {
+        $y = date('Y');
+        $m = date('m');
+        return ($m < 6) ? ($y-1) : $y;
+    }
 }

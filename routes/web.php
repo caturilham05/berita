@@ -81,16 +81,17 @@ Route::get('/football/standing/change/ajax/{id_origin}', [HomeController::class,
 Route::get('/standing/{id}/detail/{title}', [HomeController::class, 'football_standing_view'])->name('public.standing');
 Route::get('/statistic/player/{id}', [HomeController::class, 'football_statistic_player_change'])->name('public.statistic.player');
 
-Route::get('/schedule/{league_id_origin}/{league}', [ScheduleController::class, 'index'])->name('public.schedule');
+Route::get('/schedule', [ScheduleController::class, 'index'])->name('public.schedule');
+Route::get('/schedule/content/ajax/{league_id_origin}/{date_custom}', [ScheduleController::class, 'schedule_content_ajax'])->name('public.schedule_content_ajax');
 
 Route::get('/scrap/{date}/{page}', [ScrapController::class, 'scrap_sync'])->name('public.scrap.sync');	
 /*Public*/
 
-if (env('APP_ENV') == 'local')
+if (env('APP_ENV') == 'live')
 {
 	Route::get('/test', function(){
-		if (Cache::has('standings')) {
-			return Cache::pull('standings');
+		if (Cache::has('fixtures_per_date')) {
+			return Cache::pull('fixtures_per_date');
 		}
 
 		return 'testing';

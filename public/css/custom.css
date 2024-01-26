@@ -788,7 +788,74 @@ footer{
   background-color: var(--cream);
 }
 
+.schedule_match_day{
+  background-color: var(--blue);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  font-size: 12px;
+  color: var(--white);
+}
+
+.schedule_date{
+  display: flex;
+  align-items: center;
+}
+
+.schedule_date_nav_link{
+  color: #000;
+}
+
+.schedule_date_nav_link:hover{
+  background-color: var(--green);
+  color: #fff;
+}
+
 /*table*/
+
+/*schedule_content*/
+.schedule_content{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background-color: var(--white);
+  margin-top: 1rem; padding: 2rem;
+}
+.schedule_content_team{
+  flex: 0 0 calc(100% / (12 / 4));
+  max-width: calc(100% / (12 / 4));
+  margin-left: auto;
+}
+
+.schedule_content_team_name{
+  font-size: 17px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 1rem;
+  letter-spacing: 0.3px;
+}
+
+.schedule_content_score{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.schedule_content_score_team{
+  font-size: 30px;
+  font-weight: bold;
+  color: var(--abu);
+}
+
+.schedule_content_score_v{
+  margin-left: 1rem;
+  margin-right: 1rem;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/*schedule_content*/
+
 
 @media (max-width: 768px) {
   .recomendation_image{

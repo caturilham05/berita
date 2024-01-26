@@ -2,6 +2,11 @@
 
 namespace App\Helpers;
 
+use DatePeriod;
+use DateInterval;
+use DateTime;
+use DateTimeZone;
+
 class FunctionHelper {
 
     public static function curlCustom($url = '', $headers = array(), $method = 'GET', $fields = array() , $is_document = 0)
@@ -51,8 +56,8 @@ class FunctionHelper {
                     'id'        => 1,
                     'referee'   => 'lorem dari ajax',
                     'timezone'  => 'UTC',
-                    'date'      => '2023-12-01T15:00:00+00:00',
-                    "timestamp" => 1702134000
+                    'date'      => '2024-01-20T15:00:00+00:00',
+                    "timestamp" => 1705762800
                 ],
                 'league' => [
                     'id'      => 39,
@@ -105,8 +110,8 @@ class FunctionHelper {
                     'id'        => 1,
                     'referee'   => 'lorem dari ajax 2',
                     'timezone'  => 'UTC',
-                    'date'      => '2023-12-11T15:00:00+00:00',
-                    "timestamp" => 1702134000
+                    'date'      => '2024-01-20T15:00:00+00:00',
+                    "timestamp" => 1705762800
                 ],
                 'league' => [
                     'id'      => 140,
@@ -966,5 +971,42 @@ class FunctionHelper {
         $y = date('Y');
         $m = date('m');
         return ($m < 6) ? ($y-1) : $y;
+    }
+
+    public static function two_weeks_range()
+    {
+        for ($i=0 ; $i < 8 ;$i++)
+        {
+            $prev[]           = date('D, d M',strtotime("-{$i} day",time()));
+            $next[]           = date('D, d M',strtotime("+{$i} day",time()));
+            $prev_full_date[] = date('Y-m-d',strtotime("-{$i} day",time()));
+            $next_full_date[] = date('Y-m-d',strtotime("+{$i} day",time()));
+        }
+
+        // foreach ($prev as $key => $date)
+        // {
+        //     $prev_explode = explode(' ', $date);
+        //     $prev_res[]   = sprintf('%s, %s %s', $prev_explode[1], $prev_explode[0], $prev_explode[2]);
+        // }
+
+        // foreach ($next as $key => $date)
+        // {
+        //     $next_explode = explode(' ', $date);
+        //     $next_res[]   = sprintf('%s, %s %s', $next_explode[1], $next_explode[0], $next_explode[2]);
+        // }
+
+        $datas = [
+            'prev_dates' => [
+                'first'  => $prev,
+                'second' => $prev_full_date
+            ],
+            'next_dates' => [
+                'first'  => $next,
+                'second' => $next_full_date
+            ]
+        ];
+
+
+        return $datas;
     }
 }

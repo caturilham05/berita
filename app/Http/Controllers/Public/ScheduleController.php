@@ -18,105 +18,117 @@ class ScheduleController extends Controller
 {
     public function index(Request $request)
     {
+        $schedule_content      = $this->schedule_content($request->id, $request->date);
+        $schedule_content_date = array_keys($schedule_content);
+
+        return view('public.football.schedule', [
+            'title'                 => 'Jadwal & Hasil Pertandingan',
+            'title_content'         => 'Jadwal & Hasil',
+            'meta_description'      => 'Jadwal dan hasil pertandingan sepakbola',
+            'meta_keywords'         => 'jadwal, pertandingan, schedule, sepakbola, hasil pertandingan, jadwal liga, liga inggris, liga spanyol, liga indonesia, liga prancis',
+            'meta_author'           => 'kbsnews',
+            'league_id_origin'      => $request->id,
+            'schedule_content_date' => $schedule_content_date,
+            'date_real'             => $request->date,
+        ]);
+    }
+
+    public function schedule_content($league_id_origin, $date_custom)
+    {
+        $dates                        = FunctionHelper::two_weeks_range();
+        $dates['prev_dates']['first'] = array_reverse($dates['prev_dates']['first']);
+        $dates_merge                  = array_merge($dates['prev_dates']['first'], $dates['next_dates']['first']);
+        $dates_merge                  = array_unique($dates_merge);
+        $dates_merge                  = array_values($dates_merge);
+
         switch (env('APP_ENV'))
         {
             case 'live':
-                $ls = LS::select('league_id_origin', 'year')->where('league_id_origin', $request->league_id_origin)->where('year', FunctionHelper::year_def())->get()->toArray();
-                if (empty($ls)) return abort(404);
-                if (Cache::has('fixtures'))
+                if (Cache::has('fixtures_per_date'))
                 {
-                    $output = Cache::get('fixtures');
+                    $schedules = Cache::get('fixtures_per_date');
                 }
                 else
                 {
-                    foreach ($ls as $key => $value)
-                    {
-                        $uri         = sprintf('fixtures?season=%s&league=%s', $value['year'], $value['league_id_origin']);
-                        $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
-                        $output[]    = $competition['response'] ?? [];
-                    }
-            
-                    Cache::add('fixtures', $output, now()->addMinutes(60));
+                    $uri         = sprintf('fixtures?season=%s&league=%s&date=%s', FunctionHelper::year_def(), $league_id_origin, $date_custom);
+                    $competition = FunctionHelper::rapidApiFootball($uri, 'GET');
+                    $schedules[] = $competition['response'] ?? [];
+                    // Cache::add('fixtures_per_date', $schedules, now()->addMinutes(300));
                 }
 
-                // Define the date and time string in the Indonesian timezone
-                $dateString = date('Y-m-d H:i:s');
-                $timezoneIndonesia = new DateTimeZone('Asia/Jakarta'); // Use the appropriate timezone for Indonesia
-
-                // Create a DateTime object with the Indonesian timezone
-                $dateTimeIndonesia = new DateTime($dateString, $timezoneIndonesia);
-
-                // Convert the DateTime object to UTC timezone
-                $timezoneUTC = new DateTimeZone('UTC');
-                $dateTimeUTC = new DateTime();
-                $dateTimeUTC->setTimezone($timezoneUTC);
-                $dateTimeUTC->setTimestamp($dateTimeIndonesia->getTimestamp());
-
-                // Format the result in UTC
-                $utcDateString = $dateTimeUTC->format('Y-m-d H:i:s');
-
-                print($utcDateString);
-                // convert to timestamp
-                $utcDateString = strtotime($utcDateString);
-
-                $oneWeekAgo = strtotime('-7 days');
-
-                $filteredData = [];
-                $lessThan     = [];
-                $moreThan     = [];
-                $groupedData  = [];
-                $mergeData    = [];
-
-                foreach ($output as $key => $value)
+                $schedules_final = [];
+                foreach ($schedules as $key => $schedule)
                 {
-                    foreach ($value as $item)
+                    foreach ($schedule as $schedule_v)
                     {
-                        $fixtureDateTimestamp = strtotime($item['fixture']['date']);
-                        $leagueId             = $item['league']['id'];
-                        
-                        // Check if the fixture date is now or in the future
-                        if ($fixtureDateTimestamp <= $utcDateString)
+                        $tz        = 'UTC';
+                        $dt        = new DateTime($schedule_v['fixture']['date'], new DateTimeZone($tz)); //first argument "must" be a string
+                        $dt->setTimestamp($schedule_v['fixture']['timestamp']); //adjust the object to correct timestamp
+                        $date_fixture_repair = $dt->format('D, d M');
+
+                        foreach ($dates_merge as $value_date_merge)
                         {
-                            if (!isset($lessThan[$leagueId])) $lessThan[$leagueId] = [];
-                            $lessThan[$leagueId][] = $item;
+                            if ($date_fixture_repair == $value_date_merge)
+                            {
+                                $schedules_final[$value_date_merge][] = $schedule_v;
+                            }
                         }
-                        else
-                        {
-                            if (!isset($moreThan[$leagueId])) $moreThan[$leagueId] = [];
-                            $moreThan[$leagueId][] = $item;
-                        }
-                        // if ($fixtureDateTimestamp <= $utcDateString)
-                        // {
-                        //     // echo '<pre>';
-                        //     // print_r($item);
-                        //     // echo '</pre>';
-                        //     if (!isset($groupedData[$leagueId])) $groupedData[$leagueId] = [];
-                        //     $groupedData[$leagueId][] = $item;
-                        // }
                     }
                 }
-
-                $mergeData   = array_merge($lessThan, $moreThan);
-                $lessThan    = array_slice($mergeData[0], -7);
-                $moreThan    = array_slice($mergeData[1], 0, 7);
-                $groupedData = array_merge($lessThan, $moreThan);
+                $schedules_datas = [];
+                foreach ($dates_merge as $item) $schedules_datas[$item] = isset($schedules_final[$item]) ? $schedules_final[$item] : [];
             break;
 
             case 'local':
-                $groupedData = FunctionHelper::football_schedule_dummy($request->league_id_origin);                
-            break;
+                $schedules       = FunctionHelper::football_schedule_dummy($league_id_origin);
+                $schedules_final = [];
+                foreach ($schedules as $key => $schedule)
+                {
+                    foreach ($schedule as $schedule_v)
+                    {
+                        $tz        = 'UTC';
+                        $dt        = new DateTime($schedule_v['fixture']['date'], new DateTimeZone($tz)); //first argument "must" be a string
+                        $dt->setTimestamp($schedule_v['fixture']['timestamp']); //adjust the object to correct timestamp
+                        $date_fixture_repair = $dt->format('D, d M');
 
-            default:
-                return;
+                        foreach ($dates_merge as $value_date_merge)
+                        {
+                            if ($date_fixture_repair == $value_date_merge)
+                            {
+                                $schedules_final[$value_date_merge][] = $schedule_v;
+                            }
+                        }
+                    }
+                }
+                $schedules_datas = [];
+                foreach ($dates_merge as $item) $schedules_datas[$item] = isset($schedules_final[$item]) ? $schedules_final[$item] : [];
             break;
+            
+            default:
+                // code...
+                break;
         }
 
-        return view('public.football.schedule', [
-            'title'            => 'Jadwal & Hasil Pertandingan',
-            'schedules'        => $groupedData ?? '',
-            'meta_description' => 'Jadwal dan hasil pertandingan sepakbola',
-            'meta_keywords'    => 'jadwal, pertandingan, schedule, sepakbola, hasil pertandingan, jadwal liga, liga inggris, liga spanyol, liga indonesia, liga prancis',
-            'meta_author'      => 'kbsnews'
+        return $schedules_datas;
+    }
+
+    public function schedule_content_ajax($league_id_origin, $date)
+    {
+        $res         = $this->schedule_content($league_id_origin, $date);
+        $date_custom = date('D, d M', strtotime($date));
+        $data        = isset($res[$date_custom]) ? $res[$date_custom] : [];
+        $html        = view('public.football.schedule_england_content', [
+            'data'             => $data,
+            'league_id_origin' => $league_id_origin,
+            'date'             => $date,
+            'date_custom'      => $date_custom
+        ])->render();
+
+        return response()->json([
+            'ok'      => 1,
+            'message' => 'success',
+            'html'    => $html,
+            'data'    => $data
         ]);
     }
 }
